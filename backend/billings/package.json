@@ -1,0 +1,19 @@
+{
+  "name": "billings",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node src/index.ts"
+  },
+  "dependencies": {
+    "express": "^4.21.1",
+    "pg": "^8.13.0",
+    "typescript": "^5.6.3"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/pg": "^8.11.10",
+    "ts-node": "^10.9.2"
+  }
+}

@@ -1,0 +1,96 @@
+services:
+  users-db:
+    image: postgres:13
+    container_name: postgres-users-db
+    restart: always
+    environment:
+      POSTGRES_USER: users
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: users_db
+    volumes:
+      - postgres-users-data:/var/lib/postgresql/data
+    ports:
+      - "5440:5432"
+    networks:
+      - app-network
+  
+  # frontend:
+  #   build: 
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3000:3000"
+
+  # aircons:
+  #   build:
+  #     context: ./backend/aircons
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3001:3000"
+
+  # billings:
+  #   build: 
+  #     context: ./backend/billings
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3002:3000"
+
+  # electricity-usage:
+  #   build: 
+  #     context: ./backend/electricity-usages
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3003:3000"
+
+  # fans:
+  #   build: 
+  #     context: ./backend/fans
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3004:3000"
+
+  # fridges:
+  #   build: 
+  #     context: ./backend/fridges
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3005:3000"
+
+  # lights:
+  #   build: 
+  #     context: ./backend/lights
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3006:3000"
+
+  # tvs:
+  #   build:
+  #     context: ./backend/tvs
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3007:3000"
+
+  users:
+    build: 
+      context: ./backend/users
+    ports:
+      - "3008:3000"
+    command: ./node_modules/.bin/ts-node src/index.ts
+    environment:
+      DATABASE_URL: postgres://users:password@users-db:5432/users_db
+    depends_on:
+      - users-db
+    networks:
+      - app-network
+
+
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres-users-data:
+
+
+# postgres://<username>:<password>@<host>:<port>/<database>
