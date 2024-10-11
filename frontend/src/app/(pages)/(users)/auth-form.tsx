@@ -33,7 +33,7 @@ const AuthForm = ({ type }: { type: string }) => {
   });
 
   const signOut = async () => {
-    const response = await fetch('http://localhost:3008/sign-out', {
+    const response = await fetch('http://localhost:3007/sign-out', {
         method: 'POST',
         credentials: 'include', // Include cookies in the request
     });
@@ -63,7 +63,7 @@ const AuthForm = ({ type }: { type: string }) => {
           password: data.password,
         };
 
-        const response = await fetch(`http://localhost:3008/sign-up`, {
+        const response = await fetch(`http://localhost:3007/sign-up`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ const AuthForm = ({ type }: { type: string }) => {
           password: data.password,
         };
 
-        const response = await fetch(`http://localhost:3008/sign-in`, {
+        const response = await fetch(`http://localhost:3007/sign-in`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

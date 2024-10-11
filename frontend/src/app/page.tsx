@@ -19,7 +19,7 @@ const HomePage = () => {
         // Get the token from local storage or wherever you store it
         const token = localStorage.getItem('token'); // Adjust according to your token storage method
 
-        const response = await fetch("http://localhost:3008/get-login", {
+        const response = await fetch("http://localhost:3007/get-login", {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${token}`, // Include the token in the Authorization header

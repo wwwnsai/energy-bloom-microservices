@@ -3,7 +3,6 @@ frontend/node_modules/
 backend/aircons/node_modules/
 backend/billings/node_modules/
 backend/electricity-usages/node_modules/
-backend/fans/node_modules/
 backend/fridges/node_modules/
 backend/lights/node_modules/
 backend/tvs/node_modules/
@@ -17,7 +16,6 @@ frontend/build/
 backend/aircons/build/
 backend/billings/build/
 backend/electricity-usages/build/
-backend/fans/build/
 backend/fridges/build/
 backend/lights/build/
 backend/tvs/build/
