@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-export const HoverEffect = ({
+export const HoverEffectBilling = ({
   items,
   className,
   useGrid = true,

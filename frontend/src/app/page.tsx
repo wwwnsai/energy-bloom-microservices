@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import RightSidebar from "../components/navigations/right-sidebar"; // Adjust paths as needed
 import HeaderBox from "../components/shared/box/header-box";
-import { HoverEffect } from "../components/shared/cards/card-hover-effect";
 
 const HomePage = () => {
   const router = useRouter();
