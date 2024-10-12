@@ -84,10 +84,7 @@ const AuthForm = ({ type }: { type: string }) => {
         if (!response.ok) {
           console.log("Error:", result.error);
           throw new Error(result.error || 'Something went wrong');
-        }
-
-        if (result.user) {
-          setUser(result.user);
+        } else {
           router.push('/sign-in');
         }
       }
@@ -129,7 +126,9 @@ const AuthForm = ({ type }: { type: string }) => {
   };
 
   useEffect(() => {
-    signOut();
+    if (type === "sign-in") {
+      signOut();
+    }
   }, []);
 
   return (

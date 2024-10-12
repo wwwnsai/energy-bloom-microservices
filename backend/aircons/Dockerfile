@@ -16,4 +16,5 @@ ENV DATABASE_URL=postgresql://aircons:password@aircons-db:5432/aircons_db
 
 # Expose port and run the application
 EXPOSE 3001
+
 CMD ["./node_modules/.bin/ts-node", "src/index.ts"]
