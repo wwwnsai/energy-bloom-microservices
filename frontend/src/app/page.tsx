@@ -11,38 +11,43 @@ const HomePage = () => {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  console.log("this is home page");
 
   useEffect(() => {
     const checkUser = async () => {
       try {
-        // Get the token from local storage or wherever you store it
-        const token = localStorage.getItem('token'); // Adjust according to your token storage method
-
+        const token = localStorage.getItem('token');
+        console.log("Token:", token);
+    
+        if (!token) {
+          console.log("No token found, user is not logged in.");
+          router.push("/sign-in"); // Redirect if no token is found
+          return;
+        }
+    
         const response = await fetch("http://localhost:3007/get-login", {
           method: "GET",
           headers: {
-            "Authorization": `Bearer ${token}`, // Include the token in the Authorization header
+            "Authorization": `Bearer ${token}`, // Properly format the Authorization header
             "Content-Type": "application/json",
           },
-          credentials: 'include', // Optional: include credentials if needed
+          credentials: 'include',
         });
-
-        if (response.ok) { 
+    
+        if (response.ok) {
           const userData = await response.json();
-
-          console.log("User is logged in.");
-          setUser(userData); 
-
-        } 
-        // else {
-        //   console.error("Failed to fetch user data:", response.statusText);
-        //   router.push("/sign-in"); 
-        // }
+          console.log("User is logged in:", userData);
+          setUser(userData);
+          router.push("/");
+        } else {
+          console.error("Failed to fetch user data:", response.statusText);
+          router.push("/sign-in"); // Redirect to sign-in on failure
+        }
       } catch (error) {
         console.error("Error fetching user data:", error);
         router.push("/sign-in");
       } finally {
-        setLoading(false); // Ensure loading state is updated in any case
+        setLoading(false); // Update loading state
       }
     };
 

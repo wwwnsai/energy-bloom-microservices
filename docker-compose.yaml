@@ -64,27 +64,12 @@
     #   networks:
     #     - app-network
 
-    # fridges:
-    #   build: 
-    #     context: ./backend/fridges
-    #     dockerfile: Dockerfile
-    #   ports:
-    #     - "3004:3000"
-
     # lights:
     #   build: 
     #     context: ./backend/lights
     #     dockerfile: Dockerfile
     #   ports:
     #     - "3005:3000"
-
-    # tvs:
-    #   build:
-    #     context: ./backend/tvs
-    #     dockerfile: Dockerfile
-    #   ports:
-    #     - "3006:3000"
-
     users:
       build: 
         context: ./backend/users

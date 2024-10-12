@@ -33,15 +33,22 @@ const AuthForm = ({ type }: { type: string }) => {
   });
 
   const signOut = async () => {
-    const response = await fetch('http://localhost:3007/sign-out', {
-        method: 'POST',
-        credentials: 'include', // Include cookies in the request
-    });
-    
-    if (response.ok) {
-        console.log("Signed out successfully.");
-    } else {
-        console.error("Error signing out.");
+    try {
+      const response = await fetch("http://localhost:3007/sign-out", {
+        method: "POST",
+        credentials: 'include',
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      console.log(data.message);
+      localStorage.removeItem('token');
+      router.push("/sign-in");
+    } catch (error) {
+      console.error("Error signing out:", error);
     }
   };
 
@@ -100,19 +107,15 @@ const AuthForm = ({ type }: { type: string }) => {
           credentials: 'include',
         });
         
-        const result = await response.json(); 
-        
         if (!response.ok) {
-          throw new Error(result.error || 'Something went wrong');
-        } else {
-          const { user, token } = result;
-          localStorage.setItem('token', token);
-        }        
-
-        if (result.user) {
-          setUser(result.user);
-          router.push('/');
+          const errorData = await response.json();
+          console.error("Sign-in error:", errorData.error);
+          throw new Error(errorData.error || 'Something went wrong');
         }
+  
+        const { user, token } = await response.json();
+        localStorage.setItem('token', token);
+        router.push('/');  
       }
     } catch (error) {
       console.error("Error during authentication:", error);
