@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express';
-import { Pool } from 'pg';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -7,7 +6,6 @@ import Usages from '../models/Usages'; // Sequelize model
 import sequelize from './utils/db'; // Sequelize instance
 import jwt from 'jsonwebtoken';
 import bodyParser from 'body-parser';
-import axios from 'axios';
 
 dotenv.config();
 

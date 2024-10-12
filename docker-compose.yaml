@@ -1,4 +1,19 @@
   services:
+    aircons-db:
+      image: postgres:13
+      container_name: postgres-aircons-db
+      restart: always
+      environment:
+        POSTGRES_USER: aircons
+        POSTGRES_PASSWORD: password
+        POSTGRES_DB: aircons_db
+      volumes:
+        - postgres-aircons-data:/var/lib/postgresql/data
+      ports:
+        - "5433:5432"
+      networks:
+        - app-network
+
     users-db:
       image: postgres:13
       container_name: postgres-users-db
@@ -28,6 +43,7 @@
         - "5435:5432"
       networks:
         - app-network
+
     
     # frontend:
     #   build: 
@@ -36,12 +52,22 @@
     #   ports:
     #     - "3000:3000"
 
-    # aircons:
-    #   build:
-    #     context: ./backend/aircons
-    #     dockerfile: Dockerfile
-    #   ports:
-    #     - "3001:3001"
+    aircons:
+      build: 
+        context: ./backend/aircons
+        dockerfile: Dockerfile
+      ports:
+        - "3001:3001"
+      command: >
+        sh -c "until pg_isready -h aircons-db -U aircons; do sleep 2; done; 
+        npx sequelize-cli db:migrate; 
+        ./node_modules/.bin/ts-node src/index.ts"
+      environment:
+        DATABASE_URL: postgres://aircons:password@aircons-db:5432/aircons_db
+      depends_on:
+        - aircons-db
+      networks:
+        - app-network
 
     # billings:
     #   build: 
@@ -94,6 +120,7 @@
       driver: bridge
 
   volumes:
+    postgres-aircons-data:
     postgres-users-data:
     postgres-usages-data:
 
