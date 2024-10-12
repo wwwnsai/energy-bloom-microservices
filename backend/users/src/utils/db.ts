@@ -21,7 +21,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const sequelize = new Sequelize(process.env.DATABASE_URL!, {
+const sequelize = new Sequelize("postgresql://users:password@users-db:5432/users_db"!, {
   dialect: 'postgres',
 });
 
