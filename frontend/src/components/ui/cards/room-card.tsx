@@ -4,6 +4,7 @@ import DeviceTab from "./device-tab";
 import AirConditionerTab from "./air-conditioner-tab";
 import { IconTemperature, IconSnowflake, IconWind } from "@tabler/icons-react";
 import AirConditionerControl from "../airconditioner/air-conditioner-control";
+import { motion } from "framer-motion";
 
 interface RoomCardProps {
   title: string;
@@ -36,31 +37,47 @@ const RoomCard = ({
           backgroundSize: "cover",
           backgroundPosition: "center",
           filter: lightOn ? "brightness(1)" : "brightness(0.5)",
+          transition: "filter 0.5s ease-in-out",
         }}
       />
 
       {/* Light Switch */}
-      <div className="absolute top-5 right-5 z-20">
+      <motion.div
+        className="absolute top-5 right-5 z-20"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+      >
         <Switch
           checked={lightOn}
           onChange={setLightOn}
           className={`${
             lightOn ? "bg-green-500" : "bg-gray-700"
-          } relative inline-flex h-6 w-11 items-center rounded-full`}
+          } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
         >
-          <span
+          <motion.span
             className={`${
               lightOn ? "translate-x-6" : "translate-x-1"
             } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+            layout
           />
         </Switch>
-      </div>
+      </motion.div>
 
       {/* TITLE & DESCRIPTION */}
-      <div className="relative z-10">
-        <p className="text-lg font-semibold text-white">{title}</p>
-        <p className="text-sm font-normal text-neutral-200">{description}</p>
-      </div>
+      <motion.div
+        className="relative z-10"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
+      >
+        <motion.p className="text-lg font-semibold text-white" layout>
+          {title}
+        </motion.p>
+        <motion.p className="text-sm font-normal text-neutral-200" layout>
+          {description}
+        </motion.p>
+      </motion.div>
 
       {/* AIR CONDITIONER CONTROLS */}
       <AirConditionerControl

@@ -23,14 +23,26 @@ const AddDeviceSheet = () => {
     <>
       {/* SHEET TRIGGER */}
       <motion.div
-        whileHover={{ scale: 1.05 }}
+        whileHover={{
+          backgroundPosition: "150% 50%",
+          scale: 1.05,
+          backgroundSize: "200%", 
+          opacity: 1, 
+        }}
         whileTap={{ scale: 0.95 }}
-        className="relative z-10 flex justify-center items-center space-x-1 p-[0.9rem] w-full rounded-full transition-all duration-500 group bg-black hover:bg-white cursor-pointer"
+        className="relative z-10 flex justify-center items-center space-x-1 p-[0.9rem] w-full rounded-full transition-all duration-500 group bg-black cursor-pointer"
         onClick={toggleSheet}
+        style={{
+          backgroundImage: `radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 70%)`, 
+          backgroundSize: "0%",
+          backgroundPosition: "50% 50%", 
+          transition:
+            "background-position 1.5s ease, background-size 1.5s ease, scale 0.3s ease",
+        }}
       >
-        <PlusIcon className="text-white group-hover:text-black w-5 h-5" />
+        <PlusIcon className="text-white w-5 h-5" />
         <motion.p
-          className="text-sm font-semibold text-white group-hover:text-black"
+          className="text-sm font-semibold text-white"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1 }}
