@@ -11,33 +11,33 @@ const getCurrentMonthYear = () => {
 };
 
 export const BillingPage = async () => {
-  const user = await getLoggedInUser();
-  let loggedIn = null;
-  let billings: Billing[] = [];
+//   const user = await getLoggedInUser();
+//   let loggedIn = null;
+//   let billings: Billing[] = [];
 
-  if (user) {
-    loggedIn = await getUserInfo({ user_id: user.id });
-    billings = await getBillings({ user_id: user.id });
-  }
+//   if (user) {
+//     loggedIn = await getUserInfo({ user_id: user.id });
+//     billings = await getBillings({ user_id: user.id });
+//   }
 
-  let formatedBillings = billings.map((bill) => {
-    const monthFormatted = new Date(bill.created_at).toLocaleString('en-US', { month: 'long' });
+//   let formatedBillings = billings.map((bill) => {
+//     const monthFormatted = new Date(bill.created_at).toLocaleString('en-US', { month: 'long' });
 
-    return {
-      month_year: `${monthFormatted} ${bill.year}`,
-      price: bill.price,
-      usage: bill.usage,
-      tax: bill.tax,
-      total: bill.total,
-    };
-  });
+//     return {
+//       month_year: `${monthFormatted} ${bill.year}`,
+//       price: bill.price,
+//       usage: bill.usage,
+//       tax: bill.tax,
+//       total: bill.total,
+//     };
+//   });
 
-  console.log("LOGGED IN USER:", loggedIn);
-  console.log("USER'S FORMATED BILLING:", formatedBillings);
+//   console.log("LOGGED IN USER:", loggedIn);
+//   console.log("USER'S FORMATED BILLING:", formatedBillings);
 
   return (
     <section className="no-scrollbar flex w-full flex-row max-xl:max-h-screen max-xl:overflow-y-scroll">
-      <div
+      {/* <div
         className="no-scrollbar flex w-full flex-1 flex-col gap-8 px-5 py-7 
         sm:px-8 
         lg:py-12 
@@ -51,7 +51,7 @@ export const BillingPage = async () => {
           />
         </header>
         <HoverEffectBilling items={formatedBillings} />
-      </div>
+      </div> */}
     </section>
   );
 };

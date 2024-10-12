@@ -11,6 +11,8 @@ class user extends Model {
   public city!: string;
   public postal_code!: string;
   public date_of_birth!: Date;
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 user.init(

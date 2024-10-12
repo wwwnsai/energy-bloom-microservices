@@ -13,34 +13,34 @@ import dayjs from "dayjs";
 const MySmartMeterPage = async () => {
   const currentDateTime = dayjs().format("MMMM D, YYYY h:mm A");
   
-  const user = await getLoggedInUser();
-  let loggedIn = null;
-  let devices: Device[] = [];
-  let totalPrice = 0;
-  let totalUsage = 0;
+//   const user = await getLoggedInUser();
+//   let loggedIn = null;
+//   let devices: Device[] = [];
+//   let totalPrice = 0;
+//   let totalUsage = 0;
 
-  const remainingUsage = MAX_MONTHY_USAGE - totalUsage;
+//   const remainingUsage = MAX_MONTHY_USAGE - totalUsage;
 
-  if (user) {
-    loggedIn = await getUserInfo({ user_id: user.id });
-    devices = await getDevices({ user_id: user.id });
-    const { usage, price } = await calculateUsageAndPrice({ user_id: user.id });
-    totalPrice = price;
-    totalUsage = usage;
+//   if (user) {
+//     loggedIn = await getUserInfo({ user_id: user.id });
+//     devices = await getDevices({ user_id: user.id });
+//     const { usage, price } = await calculateUsageAndPrice({ user_id: user.id });
+//     totalPrice = price;
+//     totalUsage = usage;
     
-    console.log("------------Total usage:", totalUsage);
-  }
+//     console.log("------------Total usage:", totalUsage);
+//   }
 
-  const formattedCurrency = formatNumber(totalPrice, {
-    style: "currency",
-    currency: "THB",
-  });
+//   const formattedCurrency = formatNumber(totalPrice, {
+//     style: "currency",
+//     currency: "THB",
+//   });
 
-  const formattedKWh = formatNumber(totalUsage);
+//   const formattedKWh = formatNumber(totalUsage);
 
   return (
     <section className="no-scrollbar flex w-full flex-row max-xl:max-h-screen max-xl:overflow-y-scroll ">
-      <div
+      {/* <div
         className="no-scrollbar flex w-full flex-1 flex-col px-5 py-7 bg-dark-background rounded-3xl m-4
         sm:px-8 
         lg:py-8
@@ -75,7 +75,7 @@ const MySmartMeterPage = async () => {
           </div>
         </div>
       </div>
-      <RightSidebar user={loggedIn} devices={devices} />
+      <RightSidebar user={loggedIn} devices={devices} /> */}
     </section>
   );
 };

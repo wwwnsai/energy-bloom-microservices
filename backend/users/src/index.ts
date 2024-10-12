@@ -21,7 +21,7 @@ sequelize.sync({ force: false }) // Set force: true if you want to drop existing
   .then(() => {
     console.log('Database & tables created!');
     app.listen(PORT, () => {
-      console.log(`Billing service running on port ${PORT}`);
+      console.log(`Users service running on port ${PORT}`);
     });
   })
   .catch(err => {

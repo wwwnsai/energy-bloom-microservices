@@ -8,6 +8,8 @@ class usages extends Model {
     public year!: number;
     public usage!: number;
     public price!: number;
+    created_at?: Date;
+    updated_at?: Date;
 }
 
 usages.init(
