@@ -3,6 +3,7 @@ import { Pool } from 'pg';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import Usages from './../models/usages';
 import jwt from 'jsonwebtoken';
 import bodyParser from 'body-parser';
 
@@ -27,21 +28,14 @@ app.use(cookieParser());
 app.use(express.json());
 
 
-const pool = new Pool({
-  user: 'usages',
-  host: 'usages-db', // Adjust based on environment
-  database: 'usages_db',
-  password: 'password',
-  port: 5432,
-});
-
-app.get('/', async (req, res) => {try {
-  const result = await pool.query('SELECT * FROM usages');
-  res.json(result.rows);
-} catch (err: any) {
-  console.error("Error in query:", err.message);  // Log detailed error message
-  res.status(500).json({ error: err.message || 'Server error' });
-}
+app.get('/', async (req, res) => {
+  try {
+    const usages = await Usages.findAll();    
+    res.json(usages);
+  } catch (err: any) {
+    console.error("Error in query:", err.message);
+    res.status(500).json({ error: err.message || 'Server error' });
+  }
 });
 
 app.listen(PORT, () => {
