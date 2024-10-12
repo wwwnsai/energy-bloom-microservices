@@ -1,7 +1,7 @@
 import RightSidebar from "@/components/navigations/right-sidebar";
-import ColorIndicator from "@/components/shared/box/color-indicator";
-import HeaderBox from "@/components/shared/box/header-box";
-import DoughnutChart from "@/components/shared/charts/doughnut-chart";
+import ColorIndicator from "@/components/shared/olds/box/color-indicator";
+import HeaderBox from "@/components/shared/olds/box/header-box";
+import DoughnutChart from "@/components/shared/olds/charts/doughnut-chart";
 import { MAX_MONTHY_USAGE } from "@/constants";
 // import { getDevices } from "@/libs/actions/device.actions";
 // import { calculateUsageAndPrice } from "@/libs/actions/electricity-usage.actions";

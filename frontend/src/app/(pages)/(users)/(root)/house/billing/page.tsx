@@ -1,5 +1,5 @@
-import HeaderBox from "@/components/shared/box/header-box";
-import { HoverEffectBilling } from "@/components/shared/cards/card-hover-effect";
+import HeaderBox from "@/components/shared/olds/box/header-box";
+import { HoverEffectBilling } from "@/components/shared/olds/cards/card-hover-effect";
 // import { getBillings } from "@/libs/actions/billing.actions";
 // import { getLoggedInUser, getUserInfo } from "@/libs/actions/user.actions";
 

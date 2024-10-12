@@ -15,7 +15,7 @@ import { redirect, useRouter } from "next/navigation";
 import { authFormSchema } from "@/schema/auth.schema";
 import { Form } from "../../../components/ui/form";
 import { Button } from "../../../components/ui/button";
-import CustomInput from "../../../components/shared/inputs/custom-input";
+import CustomInput from "../../../components/shared/olds/inputs/custom-input";
 
 const AuthForm = ({ type }: { type: string }) => {
   const router = useRouter();
