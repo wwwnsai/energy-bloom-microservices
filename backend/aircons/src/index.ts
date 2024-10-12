@@ -50,3 +50,35 @@ app.get('/', async (req: Request, res: Response) => {
     res.status(500).json({ error: err.message || 'Server error' });
   }
 });
+
+app.get('/aircons', async (req: Request, res: Response) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    res.status(401).json({ error: 'Token not provided or invalid' });
+    return;
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  let decodedToken;
+  try {
+    decodedToken = jwt.verify(token, JWT_SECRET);
+  } catch (err) {
+    console.error("Token verification error:", err);
+    res.status(401).json({ error: 'Invalid or expired token' });
+  }
+
+  const user_id = (decodedToken as any).userId;
+
+  
+  try {
+
+    const aircons = await Aircons.findAll({ where: { user_id } });
+
+    res.json(aircons);
+  } catch (error: any) {
+    console.error("Error fetching aircons:", error.message);
+    res.status(500).json({ error: error.message || 'Server error' });
+  }
+});

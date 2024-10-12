@@ -2,6 +2,10 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
+    // await queryInterface.renameColumn('lights', 'month', 'lights_name');
+    // await queryInterface.renameColumn('lights', 'year', 'lights_unit_usage');
+    // await queryInterface.renameColumn('lights', 'usage', 'lights_count');
+    // await queryInterface.removeColumn('lights', 'price');
     await queryInterface.createTable('lights', {
       id: {
         type: Sequelize.INTEGER,
