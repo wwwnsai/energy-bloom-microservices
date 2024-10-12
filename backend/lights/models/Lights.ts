@@ -23,15 +23,15 @@ lights.init(
       allowNull: false,
     },
     lights_name: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     lights_unit_usage: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL,
       allowNull: false,
     },
     lights_count: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     createdAt: {

@@ -23,15 +23,15 @@ aircons.init(
       allowNull: false,
     },
     aircons_name: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     aircons_unit_usage: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL,
       allowNull: false,
     },
     aircons_count: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     createdAt: {

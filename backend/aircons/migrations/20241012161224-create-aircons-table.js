@@ -17,7 +17,7 @@ module.exports = {
         allowNull: false,
       },
       aircons_unit_usage: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.DECIMAL,
         allowNull: false,
       },
       aircons_count: {

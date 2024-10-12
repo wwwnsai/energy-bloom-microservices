@@ -6,12 +6,15 @@ import Aircons from './../models/Aircons';
 import sequelize from './utils/db';
 import jwt from 'jsonwebtoken';
 import bodyParser from 'body-parser';
+import bcrypt from 'bcrypt';
+import dayjs from 'dayjs';
 
 dotenv.config();
 
 const app = express();
 const PORT = 3001;
-const JWT_SECRET = process.env.JWT_SECRET || 'secret'; // Secure this later with env variables
+const JWT_SECRET = 'secret';
+const SALT_ROUNDS = 10; 
 
 if (!JWT_SECRET) {
   throw new Error('JWT_SECRET_KEY is not defined in environment variables');
@@ -52,6 +55,7 @@ app.get('/', async (req: Request, res: Response) => {
 });
 
 app.get('/aircons', async (req: Request, res: Response) => {
+  console.log('Received request for /aircons');
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -73,13 +77,209 @@ app.get('/aircons', async (req: Request, res: Response) => {
 
   try {
     const aircons = await Aircons.findAll({ where: { user_id } });
-    if (!aircons) {
-      res.status(404).json({ message: 'No aircons found' });
+    if (aircons.length === 0) {
+      res.status(404).json({ message: 'No aircons found for this user.' });
       return;
     }
     res.json(aircons);
   } catch (error: any) {
     console.error("Error fetching aircons:", error.message);
+    res.status(500).json({ error: error.message || 'Server error' });
+  }
+});
+
+app.get('/get-unit-usage', async (req: Request, res: Response) => {
+
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    res.status(401).json({ error: 'Token not provided or invalid' });
+    return;
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  let decodedToken;
+  try {
+    decodedToken = jwt.verify(token, JWT_SECRET);
+  } catch (err) {
+    console.error("Token verification error:", err);
+    res.status(401).json({ error: 'Invalid or expired token' });
+  }
+
+  const user_id = (decodedToken as any).userId;
+
+  try {
+    const aircons = await Aircons.findAll({ where: {user_id}  });
+    if (!aircons) {
+      res.status(404).json({ message: 'No aircons found' });
+      return;
+    }
+
+    const totalUsage = aircons.reduce((acc, aircon) => {
+      return acc + (aircon.aircons_count * Number(aircon.aircons_unit_usage));
+    }, 0);
+
+    res.json({ totalUsage });
+  } catch (error: any) {
+    console.error("Error fetching aircons:", error.message);
+    res.status(500).json({ error: error.message || 'Server error' });
+  }
+});
+
+app.post('/add-aircons', async (req: Request, res: Response) => {
+  try {
+    const { aircons_name, aircons_count, aircons_unit_usage } = req.body;
+    const createdAt = dayjs().toISOString();
+
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      res.status(401).json({ error: 'Token not provided or invalid' });
+      return;
+    }
+
+    const token = authHeader.split(' ')[1];
+    let decodedToken;
+    try {
+      decodedToken = jwt.verify(token, JWT_SECRET);
+    } catch (err) {
+      console.error("Token verification error:", err);
+      res.status(401).json({ error: 'Invalid or expired token' });
+      return;
+    }
+
+    const user_id = (decodedToken as any).userId;
+
+    const newAircon = await Aircons.create({
+      user_id,
+      aircons_name,
+      aircons_count,
+      aircons_unit_usage,
+      created_at: createdAt,
+      updated_at: createdAt,
+    });
+
+    res.status(201).json(newAircon);
+  } catch (error: any) {
+    console.error("Error adding aircons:", error.message);
+    res.status(500).json({ error: error.message || 'Server error' });
+  }
+});
+
+app.put('/update-aircons/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    try {
+      const aircon = await Aircons.findByPk(id);
+      if (!aircon) {
+        res.status(404).json({ error: 'Aircon not found' });
+        return;
+      }
+
+      const updatedAircon = await Aircons.update({
+        aircons_name: aircon.aircons_name,
+        aircons_count: aircon.aircons_count,
+        aircons_unit_usage: aircon.aircons_unit_usage, 
+        updated_at: dayjs().toISOString(),
+      }, {
+        where: { id }
+      });
+
+      if (!updatedAircon[0]) {
+        res.status(404).json({ error: 'Aircon not found' });
+        return;
+      }
+
+      res.json({ message: 'Aircon updated successfully' });
+    } catch (error: any) {
+      console.error("Error fetching aircon:", error.message);
+      res.status(500).json({ error: error.message || 'Server error' });
+      return;
+    }
+  } catch (error: any) {
+    console.error("Error updating aircon:", error.message);
+    res.status(500).json({ error: error.message || 'Server error' });
+  }
+});
+
+
+// Update aircons
+app.put('/update-aircons/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    try {
+      const aircon = await Aircons.findByPk(id);
+      if (!aircon) {
+        res.status(404).json({ error: 'Aircon not found' });
+        return;
+      }
+
+      const updatedAircon = await Aircons.update({
+        aircons_name: aircon.aircons_name,
+        aircons_count: aircon.aircons_count,
+        aircons_unit_usage: aircon.aircons_unit_usage, 
+        updated_at: dayjs().toISOString(),
+      }, {
+        where: { id }
+      });
+
+      if (!updatedAircon[0]) {
+        res.status(404).json({ error: 'Aircon not found' });
+        return;
+      }
+
+      res.json({ message: 'Aircon updated successfully' });
+      } catch (error: any) {
+        console.error("Error fetching aircon:", error.message);
+        res.status(500).json({ error: error.message || 'Server error' });
+        return;
+      }
+  } catch (error: any) {
+    console.error("Error updating aircon:", error.message);
+    res.status(500).json({ error: error.message || 'Server error' });
+  }
+});
+
+// Other routes...
+
+// Delete an aircon
+app.delete('/delete-aircons/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    // Check for authorization token
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      res.status(401).json({ error: 'Token not provided or invalid' });
+      return;
+    }
+
+    const token = authHeader.split(' ')[1];
+    let decodedToken;
+    try {
+      decodedToken = jwt.verify(token, JWT_SECRET);
+    } catch (err) {
+      console.error("Token verification error:", err);
+      res.status(401).json({ error: 'Invalid or expired token' });
+      return;
+    }
+
+    const user_id = (decodedToken as any).userId;
+
+    // Find the aircon by ID
+    const aircon = await Aircons.findOne({ where: { id, user_id } });
+    if (!aircon) {
+      res.status(404).json({ error: 'Aircon not found' });
+      return;
+    }
+
+    // Delete the aircon
+    await aircon.destroy();
+
+    res.json({ message: 'Aircon deleted successfully' });
+  } catch (error: any) {
+    console.error("Error deleting aircon:", error.message);
     res.status(500).json({ error: error.message || 'Server error' });
   }
 });
