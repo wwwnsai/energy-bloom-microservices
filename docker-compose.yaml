@@ -14,20 +14,20 @@
       networks:
         - app-network
 
-    usages-db:
-      image: postgres:13
-      container_name: postgres-usages-db
-      restart: always
-      environment:
-        POSTGRES_USER: usages
-        POSTGRES_PASSWORD: password
-        POSTGRES_DB: usages_db
-      volumes:
-        - postgres-usages-data:/var/lib/postgresql/data
-      ports:
-        - "5435:5432"
-      networks:
-        - app-network
+    # usages-db:
+    #   image: postgres:13
+    #   container_name: postgres-usages-db
+    #   restart: always
+    #   environment:
+    #     POSTGRES_USER: usages
+    #     POSTGRES_PASSWORD: password
+    #     POSTGRES_DB: usages_db
+    #   volumes:
+    #     - postgres-usages-data:/var/lib/postgresql/data
+    #   ports:
+    #     - "5435:5432"
+    #   networks:
+    #     - app-network
     
     # frontend:
     #   build: 

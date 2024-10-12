@@ -1,7 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../src/utils/db';
 
-class User extends Model {
+class user extends Model {
   public id!: number;
   public first_name!: string;
   public last_name!: string;
@@ -11,11 +11,9 @@ class User extends Model {
   public city!: string;
   public postal_code!: string;
   public date_of_birth!: Date;
-  // public createdAt!: Date;
-  // public updatedAt!: Date;
 }
 
-User.init(
+user.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -55,16 +53,11 @@ User.init(
       type: DataTypes.DATE,
       allowNull: true,
     },
-    // createdAt: {
-    //   type: DataTypes.DATE,
-    //   allowNull: false,
-    //   defaultValue: DataTypes.NOW, // Set default value to current timestamp
-    // },
-    // updatedAt: {
-    //   type: DataTypes.DATE,
-    //   allowNull: false,
-    //   defaultValue: DataTypes.NOW, // Set default value to current timestamp
-    // },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW, // Set default value to current timestamp
+    },
   },
   {
     sequelize,
@@ -73,4 +66,4 @@ User.init(
   }
 );
 
-export default User;
+export default user;

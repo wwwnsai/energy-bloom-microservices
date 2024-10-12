@@ -3,7 +3,8 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import jwt from 'jsonwebtoken';
-import User from './../models/User'; // Import the User model
+import User from '../models/user'; // Import the User model
+import sequelize from './utils/db';
 
 dotenv.config();
 
@@ -26,13 +27,25 @@ app.use(cookieParser());
 // Test route to check database connection
 app.get('/', async (req: Request, res: Response) => {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      attributes: ['id', 'first_name', 'last_name', 'email', 'password', 'address1', 'city', 'postal_code', 'date_of_birth', 'createdAt'],
+    });    
     res.json(users);
   } catch (err: any) {
     console.error("Error in query:", err.message);
     res.status(500).json({ error: err.message || 'Server error' });
   }
 });
+
+app.get('/test-connection', async (req, res) => {
+  try {
+    await sequelize.authenticate();
+    res.send('Connection has been established successfully.');
+  } catch (error: any) {
+    res.status(500).send(`Unable to connect to the database: ${error.message}`);
+  }
+});
+
 
 // New POST route for sign-up
 app.post('/sign-up', async (req: Request, res: Response) => {
