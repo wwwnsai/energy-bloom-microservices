@@ -14,18 +14,18 @@
       networks:
         - app-network
 
-    users-db:
+    billings-db:
       image: postgres:13
-      container_name: postgres-users-db
+      container_name: postgres-billings-db
       restart: always
       environment:
-        POSTGRES_USER: users
+        POSTGRES_USER: billings
         POSTGRES_PASSWORD: password
-        POSTGRES_DB: users_db
+        POSTGRES_DB: billings_db
       volumes:
-        - postgres-users-data:/var/lib/postgresql/data
+        - postgres-billings-data:/var/lib/postgresql/data
       ports:
-        - "5439:5432"
+        - "5434:5432"
       networks:
         - app-network
 
@@ -43,6 +43,38 @@
         - "5435:5432"
       networks:
         - app-network
+
+    lights-db:
+      image: postgres:13
+      container_name: postgres-lights-db
+      restart: always
+      environment:
+        POSTGRES_USER: lights
+        POSTGRES_PASSWORD: password
+        POSTGRES_DB: lights_db
+      volumes:
+        - postgres-lights-data:/var/lib/postgresql/data
+      ports:
+        - "5436:5432"
+      networks:
+        - app-network
+
+    users-db:
+      image: postgres:13
+      container_name: postgres-users-db
+      restart: always
+      environment:
+        POSTGRES_USER: users
+        POSTGRES_PASSWORD: password
+        POSTGRES_DB: users_db
+      volumes:
+        - postgres-users-data:/var/lib/postgresql/data
+      ports:
+        - "5439:5432"
+      networks:
+        - app-network
+
+    
 
     
     # frontend:
@@ -69,12 +101,22 @@
       networks:
         - app-network
 
-    # billings:
-    #   build: 
-    #     context: ./backend/billings
-    #     dockerfile: Dockerfile
-    #   ports:
-    #     - "3002:3000"
+    billings:
+      build: 
+        context: ./backend/billings
+        dockerfile: Dockerfile
+      ports:
+        - "3002:3002"
+      command: >
+        sh -c "until pg_isready -h billings-db -U billings; do sleep 2; done; 
+        npx sequelize-cli db:migrate; 
+        ./node_modules/.bin/ts-node src/index.ts"
+      environment:
+        DATABASE_URL: postgres://billings:password@billings-db:5432/billings_db
+      depends_on:
+        - billings-db
+      networks:
+        - app-network
 
     electricity-usages:
       build: 
@@ -93,12 +135,23 @@
       networks:
         - app-network
 
-    # lights:
-    #   build: 
-    #     context: ./backend/lights
-    #     dockerfile: Dockerfile
-    #   ports:
-    #     - "3005:3005"
+    lights:
+      build: 
+        context: ./backend/lights
+        dockerfile: Dockerfile
+      ports:
+        - "3004:3004"
+      command: >
+        sh -c "until pg_isready -h lights-db -U lights; do sleep 2; done; 
+        npx sequelize-cli db:migrate; 
+        ./node_modules/.bin/ts-node src/index.ts"
+      environment:
+        DATABASE_URL: postgres://lights:password@lights-db:5432/lights_db
+      depends_on:
+        - lights-db
+      networks:
+        - app-network
+
     users:
       build: 
         context: ./backend/users
@@ -121,7 +174,9 @@
 
   volumes:
     postgres-aircons-data:
+    postgres-billings-data:
     postgres-users-data:
+    postgres-lights-data:
     postgres-usages-data:
 
 
