@@ -4,14 +4,13 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import RightSidebar from "../components/navigations/right-sidebar"; // Adjust paths as needed
-import HeaderBox from "../components/shared/box/header-box";
+import RightSidebar from "../../../components/navigations/right-sidebar"; // Adjust paths as needed
+import HeaderBox from "../../../components/shared/box/header-box";
 
 const HomePage = () => {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  console.log("this is home page");
 
     useEffect(() => {
       const checkUser = async () => {
@@ -37,7 +36,6 @@ const HomePage = () => {
             const userData = await response.json();
             console.log("User is logged in:", userData);
             setUser(userData);
-            router.push("/");
           } else {
             console.error("Failed to fetch user data:", response.statusText);
             router.push("/sign-in"); // Redirect to sign-in on failure
