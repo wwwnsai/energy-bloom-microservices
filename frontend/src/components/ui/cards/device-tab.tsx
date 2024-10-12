@@ -60,6 +60,7 @@ const DeviceTab = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            onClick={() => setIsDeviceSelectionOpen(false)}
           >
             <motion.div
               className="bg-white p-6 rounded-lg shadow-lg w-[400px] text-center"
@@ -95,6 +96,7 @@ const DeviceTab = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            onClick={() => setIsPopupOpen(false)}
           >
             <motion.div
               className="bg-white p-6 rounded-lg shadow-lg w-[400px] text-center"
