@@ -1,27 +1,19 @@
-# Use the Node.js image as the base image
-FROM node:16
+FROM node:18
 
-# Set the working directory inside the container
+# Install PostgreSQL client (including pg_isready)
+RUN apt-get update && apt-get install -y postgresql-client
+
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and yarn.lock to the container
+# Copy package.json and install dependencies
 COPY package.json yarn.lock ./
+RUN yarn install
 
-# Install dependencies (including ts-node)
-RUN yarn install --frozen-lockfile
-
-# Copy all application files to the container
+# Copy rest of the application files
 COPY . .
+ENV DATABASE_URL=postgresql://lights:password@lights-db:5432/lights_db
 
-# Set environment variables (these can be overridden by Docker Compose)
-ENV PG_USER=lights
-ENV PG_PASSWORD=password
-ENV PG_HOST=lights-db
-ENV PG_DATABASE=lights_db
-ENV PG_PORT=5432
-
-# Expose the port the service will run on
-EXPOSE 3005
-
-# Command to run your service
-CMD ["yarn", "start"]
+# Expose port and run the application
+EXPOSE 3004
+CMD ["./node_modules/.bin/ts-node", "src/index.ts"]
