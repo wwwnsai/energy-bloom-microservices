@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser'; // You can remove this if you won't use cookies anymore
 import jwt from 'jsonwebtoken';
-import User from '../models/user'; // Import the User model
+import User from '../models/User'; // Import the User model
 import sequelize from './utils/db';
 import bcrypt from 'bcrypt';
 
