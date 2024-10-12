@@ -8,24 +8,37 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
       },
-      user_id: {
-        type: Sequelize.INTEGER,
+      first_name: {
+        type: Sequelize.STRING,
         allowNull: false,
       },
-      month: {
-        type: Sequelize.INTEGER,
+      last_name: {
+        type: Sequelize.STRING,
         allowNull: false,
       },
-      year: {
-        type: Sequelize.INTEGER,
+      email: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      password: {
+        type: Sequelize.STRING,
         allowNull: false,
       },
-      usage: {
-        type: Sequelize.DECIMAL,
+      address1: {
+        type: Sequelize.STRING,
         allowNull: false,
       },
-      price: {
-        type: Sequelize.DECIMAL,
+      city: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      postal_code: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      date_of_birth: {
+        type: Sequelize.DATE,
         allowNull: false,
       },
       createdAt: {

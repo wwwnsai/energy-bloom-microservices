@@ -71,11 +71,12 @@ app.get('/aircons', async (req: Request, res: Response) => {
 
   const user_id = (decodedToken as any).userId;
 
-  
   try {
-
     const aircons = await Aircons.findAll({ where: { user_id } });
-
+    if (!aircons) {
+      res.status(404).json({ message: 'No aircons found' });
+      return;
+    }
     res.json(aircons);
   } catch (error: any) {
     console.error("Error fetching aircons:", error.message);
