@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import Aircons from '../models/Aircons';
+import Aircons from './../models/Aircons';
 import sequelize from './utils/db';
 import jwt from 'jsonwebtoken';
 import bodyParser from 'body-parser';

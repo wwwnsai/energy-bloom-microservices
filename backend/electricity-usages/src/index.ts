@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import Usages from '../models/Usages'; // Sequelize model
+import Usages from './../models/Usages'; // Sequelize model
 import sequelize from './utils/db'; // Sequelize instance
 import jwt from 'jsonwebtoken';
 import bodyParser from 'body-parser';
