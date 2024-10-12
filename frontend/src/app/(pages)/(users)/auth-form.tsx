@@ -107,15 +107,19 @@ const AuthForm = ({ type }: { type: string }) => {
           credentials: 'include',
         });
         
-        if (!response.ok) {
+        if (response.ok) {
+          const { user, token } = await response.json();
+          localStorage.setItem('token', token);
+          console.log("User signed token:", token);
+          setTimeout(() => {
+            router.push('/');
+          }, 0);
+        } else {
           const errorData = await response.json();
           console.error("Sign-in error:", errorData.error);
           throw new Error(errorData.error || 'Something went wrong');
         }
-  
-        const { user, token } = await response.json();
-        localStorage.setItem('token', token);
-        router.push('/');  
+         
       }
     } catch (error) {
       console.error("Error during authentication:", error);
@@ -126,7 +130,7 @@ const AuthForm = ({ type }: { type: string }) => {
 
   useEffect(() => {
     signOut();
-  });
+  }, []);
 
   return (
     <div key={'auth-form'} className="flex min-h-screen w-full flex-col justify-center gap-5 py-10 sm:px-32 md:gap-8 ">

@@ -58,6 +58,11 @@ user.init(
       allowNull: false,
       defaultValue: DataTypes.NOW, // Set default value to current timestamp
     },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW, // Set default value to current timestamp
+    },
   },
   {
     sequelize,
