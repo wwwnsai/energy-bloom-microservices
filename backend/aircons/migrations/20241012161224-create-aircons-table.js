@@ -12,20 +12,16 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      month: {
+      aircons_name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      aircons_unit_usage: {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      year: {
+      aircons_count: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      usage: {
-        type: Sequelize.DECIMAL,
-        allowNull: false,
-      },
-      price: {
-        type: Sequelize.DECIMAL,
         allowNull: false,
       },
       createdAt: {

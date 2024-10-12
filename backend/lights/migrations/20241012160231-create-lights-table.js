@@ -12,20 +12,16 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      month: {
+      lights_name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      lights_unit_usage: {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      year: {
+      lights_count: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      usage: {
-        type: Sequelize.DECIMAL,
-        allowNull: false,
-      },
-      price: {
-        type: Sequelize.DECIMAL,
         allowNull: false,
       },
       createdAt: {

@@ -1,17 +1,17 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../src/utils/db';
 
-class Lights extends Model {
+class lights extends Model {
     public id!: number;
     public user_id!: number;
-    public Lights_name!: number;
-    public Lights_unit_usage!: number;
-    public Lights_count!: number;
+    public lights_name!: number;
+    public lights_unit_usage!: number;
+    public lights_count!: number;
     created_at?: Date;
     updated_at?: Date;
 }
 
-Lights.init(
+lights.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -22,15 +22,15 @@ Lights.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    Lights_name: {
+    lights_name: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    Lights_unit_usage: {
+    lights_unit_usage: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    Lights_count: {
+    lights_count: {
       type: DataTypes.DECIMAL,
       allowNull: false,
     },
@@ -47,9 +47,9 @@ Lights.init(
   },
   {
     sequelize,
-    tableName: 'Lights',
+    tableName: 'lights',
     timestamps: true,
   }
 );
 
-export default Lights;
+export default lights;
