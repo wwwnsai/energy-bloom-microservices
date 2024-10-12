@@ -46,8 +46,8 @@
 import { Sequelize } from 'sequelize';
 
 // Initialize Sequelize instance
-const sequelize = new Sequelize('usages'!, 'usages'!, 'password'!, {
-  host: 'usagess-db',
+const sequelize = new Sequelize('usages_db'!, 'usages'!, 'password'!, {
+  host: 'usages-db',
   dialect: 'postgres',
 });
 

@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from './../src/utils/db';
+import sequelize from '../src/utils/db';
 
 class usages extends Model {
     public id!: number;

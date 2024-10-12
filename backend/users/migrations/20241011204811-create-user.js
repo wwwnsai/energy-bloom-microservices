@@ -1,51 +1,47 @@
 'use strict';
-/** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('users', {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable('usages', {
       id: {
-        allowNull: false,
+        type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
       },
-      first_name: {
-        type: Sequelize.STRING
+      user_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
       },
-      last_name: {
-        type: Sequelize.STRING
+      month: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
       },
-      email: {
-        type: Sequelize.STRING
+      year: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
       },
-      password: {
-        type: Sequelize.STRING
+      usage: {
+        type: Sequelize.DECIMAL,
+        allowNull: false,
       },
-      address1: {
-        type: Sequelize.STRING
-      },
-      city: {
-        type: Sequelize.STRING
-      },
-      postal_code: {
-        type: Sequelize.STRING
-      },
-      date_of_birth: {
-        type: Sequelize.DATE
+      price: {
+        type: Sequelize.DECIMAL,
+        allowNull: false,
       },
       createdAt: {
-        allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
       },
       updatedAt: {
-        allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-      }
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
+      },
     });
   },
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('users');
-  }
+
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable('usages');
+  },
 };

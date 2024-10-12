@@ -17,6 +17,17 @@ if (!JWT_SECRET) {
   throw new Error('JWT_SECRET_KEY is not defined in environment variables');
 }
 
+sequelize.sync({ force: false }) // Set force: true if you want to drop existing tables
+  .then(() => {
+    console.log('Database & tables created!');
+    app.listen(PORT, () => {
+      console.log(`Billing service running on port ${PORT}`);
+    });
+  })
+  .catch(err => {
+    console.error("Error syncing the database:", err);
+  });
+
 // Middleware to handle JSON bodies
 app.use(express.json());
 app.use(cors({
@@ -135,6 +146,6 @@ app.get('/health', (req, res) => {
 });
 
 // Start the server
-app.listen(PORT, () => {
-  console.log(`User service running on port ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`User service running on port ${PORT}`);
+// });

@@ -1,23 +1,23 @@
 {
   "development": {
-    "username": "usgaes",
+    "username": "usages",
     "password": "password",
     "database": "usages_db",
-    "host": "usgaes-db",
+    "host": "usages-db",
     "dialect": "postgres"
   },
   "test": {
-    "username": "usgaes",
+    "username": "usages",
     "password": "password",
     "database": "usages_db",
-    "host": "usgaes-db",
+    "host": "usages-db",
     "dialect": "postgres"
   },
   "production": {
-    "username": "usgaes",
+    "username": "usages",
     "password": "password",
     "database": "usages_db",
-    "host": "usgaes-db",
+    "host": "usages-db",
     "dialect": "postgres"
   }
 }

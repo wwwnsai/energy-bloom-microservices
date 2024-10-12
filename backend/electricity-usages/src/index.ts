@@ -3,7 +3,8 @@ import { Pool } from 'pg';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import Usages from './../models/usages';
+import Usages from '../models/Usages';
+import sequelize from './utils/db';
 import jwt from 'jsonwebtoken';
 import bodyParser from 'body-parser';
 
@@ -17,6 +18,17 @@ const JWT_SECRET = 'secret';
 if (!JWT_SECRET) {
   throw new Error('JWT_SECRET_KEY is not defined in environment variables');
 }
+
+sequelize.sync({ force: false }) // Set force: true if you want to drop existing tables
+  .then(() => {
+    console.log('Database & tables created!');
+    app.listen(PORT, () => {
+      console.log(`Billing service running on port ${PORT}`);
+    });
+  })
+  .catch(err => {
+    console.error("Error syncing the database:", err);
+  });
 
 // Middleware to handle JSON bodies
 app.use(express.json());
@@ -38,6 +50,6 @@ app.get('/', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Billing service running on port ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Billing service running on port ${PORT}`);
+// });
