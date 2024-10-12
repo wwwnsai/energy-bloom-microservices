@@ -41,11 +41,31 @@ sequelize.sync({ force: false })
 // Routes
 
 // Get all usages (for admin or testing)
-app.get('/', async (req: Request, res: Response) => {
+app.get('/billings', async (req: Request, res: Response) => {
   try {
-    const usages = await Billings.findAll();
-    res.json(usages);
-  } catch (err: any) {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      res.status(401).json({ error: 'Token not provided or invalid' });
+      return;
+    }
+  
+    const token = authHeader.split(' ')[1];
+  
+    let decodedToken;
+    try {
+      decodedToken = jwt.verify(token, JWT_SECRET);
+    } catch (err) {
+      console.error("Token verification error:", err);
+      res.status(401).json({ error: 'Invalid or expired token' });
+    }
+  
+    const user_id = (decodedToken as any).userId;
+
+    const billings = await Billings.findAll({where: { user_id }});
+
+    res.json(billings);
+  }catch (err: any) {
     console.error("Error in query:", err.message);
     res.status(500).json({ error: err.message || 'Server error' });
   }
