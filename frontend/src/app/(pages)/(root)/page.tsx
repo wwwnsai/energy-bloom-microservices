@@ -21,6 +21,7 @@ import { PlusIcon } from "lucide-react";
 import RoomCard from "@/components/ui/cards/room-card";
 import DeviceCard from "@/components/ui/cards/device-card";
 import HomeManagementCard from "@/components/ui/cards/home-management-card";
+import { MOCK_DEVICES } from "@/constants/mock-device";
 
 const HomePage = () => {
   const [open, setOpen] = useState(false);
@@ -69,20 +70,50 @@ const HomePage = () => {
 export default HomePage;
 
 const Dashboard = () => {
+  const [selectedRoom, setSelectedRoom] = useState<
+    "Home" | "Living Room" | "Bedroom"
+  >("Home");
+
+  const handleDeleteDevice = (device: string, room: string) => {
+    console.log(`Deleted ${device} from ${room}`);
+  };
+
   return (
     <div className="flex flex-1 ml-10 my-6 mr-6 ">
       <div className="flex flex-col gap-3 flex-1 w-full h-full rounded-3xl">
         {/* TOP ROW */}
         <div className="flex gap-3 h-[60%]">
-          {/* HOME MANAGEMENT CARD */}
           <HomeManagementCard
             username="John Doe"
             backgroundImage="https://christophorus.porsche.com/.imaging/mte/porsche-templating-theme/image_1080x624/dam/Christophorus-Website/C412/Zusatzgalerien-und-Thumbnails/Garage/24_06_03_Christophorus_TheNordicBarnProject-0110.jpg/jcr:content/24_06_03_Christophorus_TheNordicBarnProject-0110.jpg"
             livingRoomImage="https://images.unsplash.com/photo-1616940844649-535215ae4eb1?q=80&w=2487&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             bedroomImage="https://images.unsplash.com/photo-1727706572437-4fcda0cbd66f?q=80&w=2371&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            onTabChange={(tab) => setSelectedRoom(tab)}
           />
-          {/* DEVICES CARD */}
-          <DeviceCard AirConditionersCount={2} LightsCount={4} />
+          <DeviceCard
+            airConditionersCount={
+              (selectedRoom === "Home"
+                ? [
+                    ...(MOCK_DEVICES["Living Room"] || []),
+                    ...(MOCK_DEVICES["Bedroom"] || []),
+                  ]
+                : MOCK_DEVICES[selectedRoom as "Living Room" | "Bedroom"] || []
+              ).filter((device) => device.includes("Air Conditioner")).length ||
+              0
+            }
+            lightsCount={
+              (selectedRoom === "Home"
+                ? [
+                    ...(MOCK_DEVICES["Living Room"] || []),
+                    ...(MOCK_DEVICES["Bedroom"] || []),
+                  ]
+                : MOCK_DEVICES[selectedRoom as "Living Room" | "Bedroom"] || []
+              ).filter((device) => device.includes("Light")).length || 0
+            }
+            selectedRoom={selectedRoom}
+            devices={MOCK_DEVICES}
+            onDeleteDevice={handleDeleteDevice}
+          />
         </div>
 
         {/* BOTTOM ROW */}

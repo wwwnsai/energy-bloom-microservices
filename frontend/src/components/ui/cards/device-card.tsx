@@ -1,42 +1,59 @@
 import React from "react";
-import { BackgroundGradientAnimation } from "../backgrounds/background-gradient-animation";
 import DeviceTab from "./device-tab";
 import { IconAirConditioning, IconBulb } from "@tabler/icons-react";
-import AddDeviceSheet from "../add-device/add-device-sheet";
-
 
 interface DeviceCardProps {
-  AirConditionersCount: number;
-  LightsCount: number;
+  airConditionersCount: number;
+  lightsCount: number;
+  selectedRoom: "Living Room" | "Bedroom" | "Home"; 
+  devices: {
+    "Living Room": string[];
+    Bedroom: string[];
+  };
+  onDeleteDevice: (device: string, room: string) => void;
 }
 
-const DeviceCard = ({ AirConditionersCount, LightsCount }: DeviceCardProps) => {
-  return (
-    <div className="h-full w-[28%] rounded-3xl bg-gray-100">
-      <BackgroundGradientAnimation className="p-5 flex flex-col justify-between h-full">
-        <div className="flex flex-col w-full">
-          {/* TITLE */}
-          <p className="text-lg font-semibold text-black mb-7">Devices</p>
-          {/* DEVICES */}
-          <div className="space-y-3">
-            <DeviceTab
-              title="Air Conditioners"
-              count={AirConditionersCount}
-              icon={
-                <IconAirConditioning className="text-neutral-700 h-6 w-6" />
-              }
-            />
-            <DeviceTab
-              title="Lights & Bulbs"
-              count={LightsCount}
-              icon={<IconBulb className="text-neutral-700 h-6 w-6" />}
-            />
-          </div>
-        </div>
+const DeviceCard = ({
+  airConditionersCount,
+  lightsCount,
+  selectedRoom,
+  devices,
+  onDeleteDevice,
+}: DeviceCardProps) => {
+  
+  // Combine devices if "Home" is selected, otherwise use the selected room's devices
+  const roomDevices =
+    selectedRoom === "Home"
+      ? [...(devices["Living Room"] || []), ...(devices["Bedroom"] || [])]
+      : devices[selectedRoom] || [];
 
-        {/* DEVICE SHEET TRIGGER */}
-        <AddDeviceSheet />
-      </BackgroundGradientAnimation>
+  // Separate air conditioners and lights
+  const airConditioners = roomDevices.filter((device) =>
+    device.includes("Air Conditioner")
+  );
+  const lights = roomDevices.filter((device) => device.includes("Light"));
+
+  return (
+    <div className="h-full w-[28%] rounded-3xl bg-gray-100 p-5">
+      <div className="space-y-3">
+        {/* Air Conditioners Tab */}
+        <DeviceTab
+          title="Air Conditioners"
+          count={airConditioners.length}
+          devices={airConditioners}
+          icon={<IconAirConditioning className="text-neutral-700 h-6 w-6" />}
+          onDelete={(device) => onDeleteDevice(device, selectedRoom)}
+        />
+
+        {/* Lights & Bulbs Tab */}
+        <DeviceTab
+          title="Lights & Bulbs"
+          count={lights.length}
+          devices={lights}
+          icon={<IconBulb className="text-neutral-700 h-6 w-6" />}
+          onDelete={(device) => onDeleteDevice(device, selectedRoom)}
+        />
+      </div>
     </div>
   );
 };

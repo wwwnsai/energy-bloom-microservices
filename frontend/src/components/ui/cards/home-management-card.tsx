@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { IconHome } from "@tabler/icons-react";
 
 interface HomeManagementCardProps {
@@ -8,6 +8,7 @@ interface HomeManagementCardProps {
   backgroundImage: string;
   livingRoomImage: string;
   bedroomImage: string;
+  onTabChange: (tab: "Home" | "Living Room" | "Bedroom") => void;
 }
 
 const HomeManagementCard = ({
@@ -15,19 +16,23 @@ const HomeManagementCard = ({
   backgroundImage,
   livingRoomImage,
   bedroomImage,
+  onTabChange,
 }: HomeManagementCardProps) => {
+  const [activeTab, setActiveTab] = useState<
+    "Home" | "Living Room" | "Bedroom"
+  >("Home");
   const [time, setTime] = useState(dayjs().format("hh:mm A"));
-  const [activeTab, setActiveTab] = useState("Home");
 
+ useEffect(() => {
+   const intervalId = setInterval(() => {
+     setTime(dayjs().format("hh:mm A"));
+   }, 1000);
+   return () => clearInterval(intervalId);
+ }, []);
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setTime(dayjs().format("hh:mm A"));
-    }, 1000);
+    onTabChange(activeTab);
+  }, [activeTab, onTabChange]);
 
-    return () => clearInterval(intervalId);
-  }, []);
-
-  // Change the image based on the activeTab
   let imageUrl;
   switch (activeTab) {
     case "Living Room":
@@ -49,7 +54,6 @@ const HomeManagementCard = ({
       transition={{ duration: 0.5 }}
     >
       <div className="w-[70%] flex flex-col">
-        {/* Animated Time */}
         <motion.h1
           className="text-3xl font-bold text-black"
           key={time}
@@ -69,7 +73,6 @@ const HomeManagementCard = ({
           Welcome back, {username}
         </motion.div>
 
-        {/* TAB NAVIGATIONS */}
         <div className="mt-6 flex space-x-3">
           <motion.button
             className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
@@ -112,10 +115,9 @@ const HomeManagementCard = ({
         </div>
       </div>
 
-      {/* Animated Background Image */}
       <motion.div
         className="w-full h-full rounded-2xl"
-        key={imageUrl} // Changing the key allows it to animate
+        key={imageUrl}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
