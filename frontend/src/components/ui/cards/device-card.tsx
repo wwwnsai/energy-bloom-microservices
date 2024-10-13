@@ -4,8 +4,10 @@ import { IconAirConditioning, IconBulb } from "@tabler/icons-react";
 import AddDeviceSheet from "../add-device/add-device-sheet";
 import { BackgroundGradientAnimation } from "../backgrounds/background-gradient-animation";
 import { Device } from "@/constants/devices";
+import { cn } from "@/utils/cn";
 
 interface DeviceCardProps {
+  useWhiteStyle?: boolean
   airConditionersCount: number;
   lightsCount: number;
   selectedRoom: "Living Room" | "Bedroom" | "Home";
@@ -21,6 +23,7 @@ interface DeviceCardProps {
 }
 
 const DeviceCard = ({
+  useWhiteStyle,
   airConditionersCount,
   lightsCount,
   selectedRoom,
@@ -43,9 +46,17 @@ const DeviceCard = ({
     <div className="h-full w-[28%] rounded-3xl bg-gray-100  ">
       <BackgroundGradientAnimation className="p-5 flex flex-col justify-between w-full h-full">
         <div className="space-y-3">
-          <h2 className="text-xl font-bold text-black mb-6">Devices</h2>
+          <h2
+            className={cn(
+              "text-xl font-bold text-black mb-6",
+              useWhiteStyle && "text-white"
+            )}
+          >
+            Devices
+          </h2>
           {/* Air Conditioners Tab */}
           <DeviceTab
+            useWhiteStyle={useWhiteStyle}
             title="Air Conditioners"
             count={roomAircons.length}
             devices={roomAircons}
@@ -56,6 +67,7 @@ const DeviceCard = ({
 
           {/* Lights & Bulbs Tab */}
           <DeviceTab
+            useWhiteStyle={useWhiteStyle}
             title="Lights & Bulbs"
             count={roomLights.length}
             devices={roomLights}

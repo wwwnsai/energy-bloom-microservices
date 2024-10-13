@@ -22,8 +22,8 @@ import RoomCard from "@/components/ui/cards/room-card";
 import DeviceCard from "@/components/ui/cards/device-card";
 import HomeManagementCard from "@/components/ui/cards/home-management-card";
 import { getAircons, getLights } from "@/constants/devices";
-import { User } from "./../../../types/user";
 import { Aircon } from "./../../../types/aircon";
+import { User } from "@/types/user";
 
 
 const HomePage = () => {
@@ -112,18 +112,16 @@ export default HomePage;
 
 
 type DashboardProps = {
-  user: User | null; // or User | undefined if that's possible in your case
+  user: User | null; 
 };
 
-const Dashboard: React.FC<DashboardProps> = ({ user }) => {
+const Dashboard = ({ user }: DashboardProps) => {
   const [selectedRoom, setSelectedRoom] = useState<
     "Home" | "Living Room" | "Bedroom"
   >("Home");
 
   const aircons = getAircons();
   const lights = getLights();
-  
-  console.log("aircons:", aircons);
 
   return (
     <div className="flex flex-1 ml-10 my-6 mr-6 ">
@@ -131,7 +129,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         {/* TOP ROW */}
         <div className="flex gap-3 h-[60%]">
           <HomeManagementCard
-            username= {user? `${user.first_name} ${user.last_name}` : "John Doe"}
+            username={
+              user ? `${user.first_name} ${user.last_name}` : "John Doe"
+            }
             backgroundImage="https://christophorus.porsche.com/.imaging/mte/porsche-templating-theme/image_1080x624/dam/Christophorus-Website/C412/Zusatzgalerien-und-Thumbnails/Garage/24_06_03_Christophorus_TheNordicBarnProject-0110.jpg/jcr:content/24_06_03_Christophorus_TheNordicBarnProject-0110.jpg"
             livingRoomImage="https://images.unsplash.com/photo-1616940844649-535215ae4eb1?q=80&w=2487&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             bedroomImage="https://images.unsplash.com/photo-1727706572437-4fcda0cbd66f?q=80&w=2371&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -182,7 +182,6 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             currentMode="Heat"
             currentFanSpeed="Low"
           />
-          {/* <div className="h-ุfull w-full rounded-3xl bg-gray-100"></div> */}
         </div>
       </div>
     </div>

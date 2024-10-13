@@ -6,6 +6,7 @@ import { deleteAircon, deleteLight } from "@/constants/devices";
 import { cn } from "@/utils/cn";
 
 interface DeviceTabProps {
+  useWhiteStyle?: boolean;
   title: string;
   count: number;
   devices: Device[];
@@ -15,6 +16,7 @@ interface DeviceTabProps {
 }
 
 const DeviceTab = ({
+  useWhiteStyle,
   title,
   count,
   devices,
@@ -88,13 +90,30 @@ const DeviceTab = ({
           {icon && icon}
         </div>
         <div className="flex flex-col gap-1">
-          <p className="text-sm font-semibold text-black">{title}</p>
-          <p className="text-sm font-normal text-neutral-500">
+          <p
+            className={cn(
+              "text-sm font-semibold text-black",
+              useWhiteStyle && "text-white"
+            )}
+          >
+            {title}
+          </p>
+          <p
+            className={cn(
+              "text-sm font-normal text-neutral-500",
+              useWhiteStyle && "text-neutral-400"
+            )}
+          >
             {count} {count > 1 ? "devices" : "device"}
           </p>
         </div>
 
-        <IconChevronRight className={cn("text-neutral-700 h-4 w-4 ml-auto", disabledClick && "text-transparent")}/>
+        <IconChevronRight
+          className={cn(
+            "text-neutral-700 h-4 w-4 ml-auto",
+            disabledClick && "text-transparent"
+          )}
+        />
       </div>
 
       {/* Device Selection Modal */}
@@ -207,7 +226,8 @@ const DeviceTab = ({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
               >
-                Edit {selectedDevice.name.replace(/Living Room|Bedroom/, "").trim()}
+                Edit{" "}
+                {selectedDevice.name.replace(/Living Room|Bedroom/, "").trim()}
               </motion.h2>
               <motion.button
                 whileHover={{ scale: 1.1 }}
