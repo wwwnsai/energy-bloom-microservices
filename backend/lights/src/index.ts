@@ -130,6 +130,7 @@ app.post('/add-light', async (req: Request, res: Response) => {
   try {
     const { lights_name, lights_count, lights_unit_usage } = req.body;
     const createdAt = dayjs().toISOString();
+    console.log("Adding lights:", lights_name, lights_count, lights_unit_usage);
 
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {

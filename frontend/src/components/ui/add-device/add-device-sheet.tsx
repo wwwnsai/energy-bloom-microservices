@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PlusIcon } from "lucide-react";
+import { addAircon, addLight } from "@/constants/devices";
+import { set } from "zod";
 
 // Mock function to simulate adding a device to the database
 const updateDeviceDatabase = (
@@ -26,13 +28,47 @@ const AddDeviceSheet = () => {
   const toggleSheet = () => setIsOpen(!isOpen);
 
   const handleAddDevice = () => {
-    updateDeviceDatabase(
-      deviceName || deviceType,
-      selectedRoom,
-      unitUsage,
-      deviceCount
-    );
+    // updateDeviceDatabase(
+    //   deviceName || deviceType,
+    //   selectedRoom,
+    //   unitUsage,
+    //   deviceCount
+    // );
+    console.log("Adding device:", deviceName, selectedRoom, unitUsage, deviceCount);
+    if (deviceType === "Air Conditioner") {
+      if (selectedRoom === "Living Room") {
+        if (deviceName.includes("Living Room") || deviceName.includes("Livingroom")) {
+          addAircon(deviceName, deviceCount, unitUsage);
+        } else {
+          addAircon("Living Room " + deviceName, deviceCount, unitUsage);
+        }
+      } else if (selectedRoom === "Bedroom") {
+        if (deviceName.includes("Bed Room") || deviceName.includes("Bedroom")) {
+          addAircon(deviceName, deviceCount, unitUsage);
+        } else {
+          addAircon("Bedroom " + deviceName, deviceCount, unitUsage);
+        }
+      }
+    } else if (deviceType === "Light & Bulb") {
+      if (selectedRoom === "Living Room") {
+        if (deviceName.includes("Living Room") || deviceName.includes("Livingroom")) {
+          addLight(deviceName, deviceCount, unitUsage);
+        } else {
+          addLight("Living Room " + deviceName, deviceCount, unitUsage);
+        }
+      } else if (selectedRoom === "Bedroom") {
+        if (deviceName.includes("Bed Room") || deviceName.includes("Bedroom")) {
+          addLight(deviceName, deviceCount, unitUsage);
+        } else {
+          addLight("Bedroom " + deviceName, deviceCount, unitUsage);
+        }
+      }
+    }
+    
     setIsOpen(false);
+    setDeviceName("");
+    setUnitUsage(0);
+    setDeviceCount(1);
   };
 
   return (

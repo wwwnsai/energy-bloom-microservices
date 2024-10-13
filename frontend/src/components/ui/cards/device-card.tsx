@@ -3,18 +3,19 @@ import DeviceTab from "./device-tab";
 import { IconAirConditioning, IconBulb } from "@tabler/icons-react";
 import AddDeviceSheet from "../add-device/add-device-sheet";
 import { BackgroundGradientAnimation } from "../backgrounds/background-gradient-animation";
+import { Device } from "@/constants/devices";
 
 interface DeviceCardProps {
   airConditionersCount: number;
   lightsCount: number;
   selectedRoom: "Living Room" | "Bedroom" | "Home";
   aircons: {
-    "Living Room": string[];
-    Bedroom: string[];
+    "Living Room": Device[];
+    "Bedroom": Device[];
   };
   lights: {
-    "Living Room": string[];
-    Bedroom: string[];
+    "Living Room": Device[];
+    "Bedroom": Device[];
   };
   onDeleteDevice: (device: string, room: string) => void;
   disabledClick?: boolean;
@@ -50,6 +51,7 @@ const DeviceCard = ({
             title="Air Conditioners"
             count={roomAircons.length}
             devices={roomAircons}
+            deviceType="Air Conditioner"
             icon={<IconAirConditioning className="text-neutral-700 h-6 w-6" />}
             onDelete={(device) => onDeleteDevice(device, selectedRoom)}
             disabledClick={disabledClick}
@@ -60,6 +62,7 @@ const DeviceCard = ({
             title="Lights & Bulbs"
             count={roomLights.length}
             devices={roomLights}
+            deviceType="Light & Bulb"
             icon={<IconBulb className="text-neutral-700 h-6 w-6" />}
             onDelete={(device) => onDeleteDevice(device, selectedRoom)}
             disabledClick={disabledClick}

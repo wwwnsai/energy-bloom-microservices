@@ -40,7 +40,6 @@ sequelize.sync({ force: false })
     console.error("Error syncing the database:", err);
   });
 
-// Routes
 
 // Get all usages (for admin or testing)
 app.get('/', async (req: Request, res: Response) => {
@@ -126,9 +125,11 @@ app.get('/get-unit-usage', async (req: Request, res: Response) => {
   }
 });
 
-app.post('/add-aircons', async (req: Request, res: Response) => {
+app.post('/add-aircon', async (req: Request, res: Response) => {
+  console.log('Received request for /add-aircons');
   try {
     const { aircons_name, aircons_count, aircons_unit_usage } = req.body;
+    console.log("Adding aircons:", aircons_name, aircons_count, aircons_unit_usage);
     const createdAt = dayjs().toISOString();
 
     const authHeader = req.headers.authorization;
@@ -167,7 +168,7 @@ app.post('/add-aircons', async (req: Request, res: Response) => {
 
 
 // Update aircons
-app.put('/update-aircons/:id', async (req: Request, res: Response) => {
+app.put('/update-aircon/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -207,7 +208,7 @@ app.put('/update-aircons/:id', async (req: Request, res: Response) => {
 // Other routes...
 
 // Delete an aircon
-app.delete('/delete-aircons/:id', async (req: Request, res: Response) => {
+app.delete('/delete-aircon/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 

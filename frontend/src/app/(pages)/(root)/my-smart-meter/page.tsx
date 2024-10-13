@@ -21,7 +21,7 @@ import { PlusIcon } from "lucide-react";
 import RoomCard from "@/components/ui/cards/room-card";
 import DeviceCard from "@/components/ui/cards/device-card";
 import HomeManagementCard from "@/components/ui/cards/home-management-card";
-import { getAircons, getLights } from "@/constants/mock-device";
+import { getAircons, getLights } from "@/constants/devices";
 
 const MySmartMeterPage = () => {
   const [open, setOpen] = useState(false);

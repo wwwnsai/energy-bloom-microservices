@@ -2,13 +2,16 @@ import { useState } from "react";
 import { IconChevronRight, IconTrash } from "@tabler/icons-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/utils/cn";
+import { Device } from "@/constants/devices";
+import { deleteAircon, deleteLight } from "@/constants/devices";
 
 interface DeviceTabProps {
   title: string;
   count: number;
-  devices: string[];
+  devices: Device[];
+  deviceType: string;
   icon?: React.JSX.Element | React.ReactNode;
-  onDelete: (device: string) => void;
+  onDelete: (id: string, device: string) => void;
   disabledClick?: boolean;
 }
 
@@ -16,24 +19,32 @@ const DeviceTab = ({
   title,
   count,
   devices,
+  deviceType,
   icon,
   onDelete,
   disabledClick,
 }: DeviceTabProps) => {
   const [isDeviceSelectionOpen, setIsDeviceSelectionOpen] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [selectedDevice, setSelectedDevice] = useState("");
+  const [selectedDevice, setSelectedDevice] = useState(["", ""]);
 
-  const handleDeviceSelect = (device: string) => {
-    setSelectedDevice(device);
+  const handleDeviceSelect = (id: string, device: string) => {
+    setSelectedDevice([id, device]);
     setIsDeviceSelectionOpen(false);
     setIsPopupOpen(true);
   };
 
   const handleDelete = () => {
-    onDelete(selectedDevice);
+    onDelete(selectedDevice[0], selectedDevice[1]);
+    if (deviceType === "Air Conditioner") {
+      deleteAircon(selectedDevice[0]);
+    } else {
+      deleteLight(selectedDevice[0]);
+    }
     setIsPopupOpen(false);
   };
+
+  console.log("Devices:", devices);
 
   return (
     <>
@@ -80,9 +91,9 @@ const DeviceTab = ({
                   <button
                     key={index}
                     className="bg-gray-200 hover:bg-gray-300 text-black px-4 py-2 rounded-lg"
-                    onClick={() => handleDeviceSelect(device)}
+                    onClick={() => handleDeviceSelect(device.id, device.name)}
                   >
-                    {device}
+                    {device.name}
                   </button>
                 ))}
               </div>
