@@ -49,7 +49,7 @@ const HomePage = () => {
 
         if (response.ok) {
           const usersData = await response.json();
-          console.log("Users data:", usersData);
+          // console.log("Users data:", usersData);
           setUser(usersData);
         } else {
           console.error("Failed to fetch users:", response.statusText);
@@ -127,7 +127,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
     console.log(`Deleted ${device} from ${room}`);
   };
   
-  console.log("aircons:", aircons);
+  // console.log("aircons:", aircons);
 
   return (
     <div className="flex flex-1 ml-10 my-6 mr-6 ">

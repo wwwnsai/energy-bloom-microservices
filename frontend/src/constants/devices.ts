@@ -55,7 +55,7 @@ export const getAircons = () => {
               airconsByRoom["Bedroom"].push({ id: aircon.id, name: aircon.aircons_name });
             }
           }
-          console.log("Aircons by room:", airconsByRoom);
+          // console.log("Aircons by room:", airconsByRoom);
           setAircons(airconsByRoom);
         } else {
           console.error("Failed to fetch aircons:", response.status, response.statusText);

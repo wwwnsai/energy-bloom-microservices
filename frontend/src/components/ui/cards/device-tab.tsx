@@ -44,7 +44,7 @@ const DeviceTab = ({
     setIsPopupOpen(false);
   };
 
-  console.log("Devices:", devices);
+  // console.log("Devices:", devices);
 
   return (
     <>

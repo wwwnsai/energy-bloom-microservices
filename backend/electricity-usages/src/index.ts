@@ -53,7 +53,9 @@ app.get('/', async (req: Request, res: Response) => {
 
 // Get monthly usage by user
 app.get('/get-monthly-usage', async (req: Request, res: Response) => {
+  console.log('Received request for /get-monthly-usage');
   const { month, year } = req.body;
+  console.log('Month:', month, 'Year:', year);
 
   const authHeader = req.headers.authorization;
 
@@ -76,14 +78,14 @@ app.get('/get-monthly-usage', async (req: Request, res: Response) => {
 
   try {
     const usage = await Usages.findOne({
-      where: { user_id, month, year }
+      where: { user_id, month: Number(month), year: Number(year) }
     });
 
     if (!usage) {
       res.status(404).json({ message: 'No usage found for the given month/year.' });
+    } else {
+      res.json({ usage: usage.usage, price: usage.price });
     }
-
-    res.json(usage);
   } catch (err: any) {
     console.error("Error fetching monthly usage:", err.message);
     res.status(500).json({ error: err.message });

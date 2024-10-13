@@ -8,12 +8,14 @@ import jwt from 'jsonwebtoken';
 import bodyParser from 'body-parser';
 import dayjs from 'dayjs';
 import billings from './../models/Billings';
+import axios from 'axios';
 
 dotenv.config();
 
 const app = express();
 const PORT = 3002;
 const JWT_SECRET = 'secret';
+const TAX = 0.7;
 
 if (!JWT_SECRET) {
   throw new Error('JWT_SECRET_KEY is not defined in environment variables');
@@ -125,7 +127,7 @@ app.get('/billings/:user_id', async (req: Request, res: Response) => {
 // Add billing
 app.post('/add-billing', async (req: Request, res: Response) => {
   try {
-    const { month, year, usage, price, tax, total } = req.body;
+    const { month, year } = req.body;
     const createdAt = dayjs().toISOString();
 
     const authHeader = req.headers.authorization;
@@ -145,23 +147,53 @@ app.post('/add-billing', async (req: Request, res: Response) => {
     }
 
     const user_id = (decodedToken as any).userId;
+    const usageServiceUrl = `http://electricity-usages:3003/get-monthly-usage`;
+    // const usageServiceUrl = `http://electricity-usages:3003/`;
 
-    const newBilling = await Billings.create({
-      user_id,
-      month,
-      year,
-      usage,
-      price,
-      tax,
-      total,
-      created_at: createdAt,
-      updated_at: createdAt,
-    });
+    try {
+      console.log("month:", month, "year:", year);
+      const usageResponse = await axios.get(usageServiceUrl, {
+        headers: { Authorization: `Bearer ${token}` },
+        params: {
+          month, year
+        }
+      });
+    
+      console.log("Response from service:", usageResponse.data);
 
-    res.status(201).json(newBilling);
-  } catch (error: any) {
-    console.error("Error adding billings:", error.message);
-    res.status(500).json({ error: error.message || 'Server error' });
+      if (!usageResponse.data) {
+        res.status(404).json({ message: 'No usage data found for this user and month/year' });
+        return;
+      }
+
+      const { usage, price } = usageResponse.data;
+      const tax = price * TAX;
+      const total = price + tax;
+
+      const createdAt = new Date(); // Assuming you have a `createdAt` defined
+
+      // const newBilling = await Billings.create({
+      //   user_id,
+      //   month,
+      //   year,
+      //   usage,
+      //   price,
+      //   tax,
+      //   total,
+      //   created_at: createdAt,
+      //   updated_at: createdAt,
+      // });
+
+      // res.json({ message: 'Billing record created', billing: newBilling });
+      res.json({ message: 'Billing record created' });
+    } catch (err: any) {
+      console.error("Error creating billing record:", err.message);
+      res.status(500).json({ error: err.message });
+      return;
+    }
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+    return;
   }
 });
 
