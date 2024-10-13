@@ -7,6 +7,7 @@ import sequelize from './utils/db';
 import jwt from 'jsonwebtoken';
 import bodyParser from 'body-parser';
 import dayjs from 'dayjs';
+import billings from './../models/Billings';
 
 dotenv.config();
 
@@ -165,7 +166,7 @@ app.post('/add-billing', async (req: Request, res: Response) => {
 });
 
 // Update a billing entry
-app.put('/update-billings/:id', async (req: Request, res: Response) => {
+app.put('/update-billing/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     try {

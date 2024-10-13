@@ -6,6 +6,7 @@ import Lights from './../models/Lights';
 import sequelize from './utils/db';
 import jwt from 'jsonwebtoken';
 import bodyParser from 'body-parser';
+import dayjs from 'dayjs';
 
 dotenv.config();
 
@@ -48,5 +49,194 @@ app.get('/', async (req: Request, res: Response) => {
   } catch (err: any) {
     console.error("Error in query:", err.message);
     res.status(500).json({ error: err.message || 'Server error' });
+  }
+});
+
+
+app.get('/lights', async (req: Request, res: Response) => {
+  console.log('Received request for /lights');
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    res.status(401).json({ error: 'Token not provided or invalid' });
+    return;
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  let decodedToken;
+  try {
+    decodedToken = jwt.verify(token, JWT_SECRET);
+  } catch (err) {
+    console.error("Token verification error:", err);
+    res.status(401).json({ error: 'Invalid or expired token' });
+  }
+
+  const user_id = (decodedToken as any).userId;
+
+  try {
+    const lights = await Lights.findAll({ where: { user_id } });
+    if (lights.length === 0) {
+      res.status(404).json({ message: 'No lights found for this user.' });
+      return;
+    }
+    res.json(lights);
+  } catch (error: any) {
+    console.error("Error fetching lights:", error.message);
+    res.status(500).json({ error: error.message || 'Server error' });
+  }
+});
+
+app.get('/get-unit-usage', async (req: Request, res: Response) => {
+
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    res.status(401).json({ error: 'Token not provided or invalid' });
+    return;
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  let decodedToken;
+  try {
+    decodedToken = jwt.verify(token, JWT_SECRET);
+  } catch (err) {
+    console.error("Token verification error:", err);
+    res.status(401).json({ error: 'Invalid or expired token' });
+  }
+
+  const user_id = (decodedToken as any).userId;
+
+  try {
+    const lights = await Lights.findAll({ where: {user_id}  });
+    if (!lights) {
+      res.status(404).json({ message: 'No lights found' });
+      return;
+    }
+
+    const totalUsage = lights.reduce((acc, light) => {
+      return acc + (light.lights_count * Number(light.lights_unit_usage));
+    }, 0);
+
+    res.json({ totalUsage });
+  } catch (error: any) {
+    console.error("Error fetching lights:", error.message);
+    res.status(500).json({ error: error.message || 'Server error' });
+  }
+});
+
+app.post('/add-light', async (req: Request, res: Response) => {
+  try {
+    const { lights_name, lights_count, lights_unit_usage } = req.body;
+    const createdAt = dayjs().toISOString();
+
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      res.status(401).json({ error: 'Token not provided or invalid' });
+      return;
+    }
+
+    const token = authHeader.split(' ')[1];
+    let decodedToken;
+    try {
+      decodedToken = jwt.verify(token, JWT_SECRET);
+    } catch (err) {
+      console.error("Token verification error:", err);
+      res.status(401).json({ error: 'Invalid or expired token' });
+      return;
+    }
+
+    const user_id = (decodedToken as any).userId;
+
+    const newLights = await Lights.create({
+      user_id,
+      lights_name,
+      lights_unit_usage,
+      lights_count,
+      created_at: createdAt,
+      updated_at: createdAt,
+    });
+
+    res.status(201).json(newLights);
+  } catch (error: any) {
+    console.error("Error adding lights:", error.message);
+    res.status(500).json({ error: error.message || 'Server error' });
+  }
+});
+
+app.put('/update-light/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    try {
+      const light = await Lights.findByPk(id);
+      if (!light) {
+        res.status(404).json({ error: 'Light not found' });
+        return;
+      }
+
+      const updatedLight = await Lights.update({
+        lights_name: light.lights_name,
+        lights_count: light.lights_count,
+        lights_unit_usage: light.lights_unit_usage, 
+        updated_at: dayjs().toISOString(),
+      }, {
+        where: { id }
+      });
+
+      if (!updatedLight[0]) {
+        res.status(404).json({ error: 'Light not found' });
+        return;
+      }
+
+      res.json({ message: 'Light updated successfully' });
+    } catch (error: any) {
+      console.error("Error fetching light:", error.message);
+      res.status(500).json({ error: error.message || 'Server error' });
+      return;
+    }
+  } catch (error: any) {
+    console.error("Error updating light:", error.message);
+    res.status(500).json({ error: error.message || 'Server error' });
+  }
+});
+
+// Other routes...
+
+// Delete an light
+app.delete('/delete-light/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      res.status(401).json({ error: 'Token not provided or invalid' });
+      return;
+    }
+
+    const token = authHeader.split(' ')[1];
+    let decodedToken;
+    try {
+      decodedToken = jwt.verify(token, JWT_SECRET);
+    } catch (err) {
+      console.error("Token verification error:", err);
+      res.status(401).json({ error: 'Invalid or expired token' });
+      return;
+    }
+
+    const user_id = (decodedToken as any).userId;
+
+    const light = await Lights.findOne({ where: { id, user_id } });
+    if (!light) {
+      res.status(404).json({ error: 'Light not found' });
+      return;
+    }
+
+    await light.destroy();
+
+    res.json({ message: 'Light deleted successfully' });
+  } catch (error: any) {
+    console.error("Error deleting light:", error.message);
+    res.status(500).json({ error: error.message || 'Server error' });
   }
 });
