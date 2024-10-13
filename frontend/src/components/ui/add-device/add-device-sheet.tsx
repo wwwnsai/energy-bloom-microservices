@@ -2,21 +2,37 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PlusIcon } from "lucide-react";
 
-const updateDeviceDatabase = (deviceName: string, room: string) => {
+// Mock function to simulate adding a device to the database
+const updateDeviceDatabase = (
+  deviceName: string,
+  room: string,
+  deviceUnitUsage: number,
+  deviceCount: number
+) => {
   const lowerCaseDevice = deviceName.toLowerCase();
-  console.log(`Adding device: ${lowerCaseDevice} to room: ${room}`);
+  console.log(
+    `Adding ${deviceCount} ${lowerCaseDevice}(s) with ${deviceUnitUsage} kWh usage to room: ${room}`
+  );
 };
 
 const AddDeviceSheet = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [deviceName, setDeviceName] = useState("Air Conditioner");
+  const [deviceType, setDeviceType] = useState("Air Conditioner");
+  const [deviceName, setDeviceName] = useState("");
   const [selectedRoom, setSelectedRoom] = useState("Living Room");
+  const [unitUsage, setUnitUsage] = useState(0);
+  const [deviceCount, setDeviceCount] = useState(1);
 
   const toggleSheet = () => setIsOpen(!isOpen);
 
   const handleAddDevice = () => {
-    updateDeviceDatabase(deviceName, selectedRoom);
-    setIsOpen(false); 
+    updateDeviceDatabase(
+      deviceName || deviceType,
+      selectedRoom,
+      unitUsage,
+      deviceCount
+    );
+    setIsOpen(false);
   };
 
   return (
@@ -26,16 +42,16 @@ const AddDeviceSheet = () => {
         whileHover={{
           backgroundPosition: "150% 50%",
           scale: 1.05,
-          backgroundSize: "200%", 
-          opacity: 1, 
+          backgroundSize: "200%",
+          opacity: 1,
         }}
         whileTap={{ scale: 0.95 }}
         className="relative z-10 flex justify-center items-center space-x-1 p-[0.9rem] w-full rounded-full transition-all duration-500 group bg-black cursor-pointer"
         onClick={toggleSheet}
         style={{
-          backgroundImage: `radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 70%)`, 
+          backgroundImage: `radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 70%)`,
           backgroundSize: "0%",
-          backgroundPosition: "50% 50%", 
+          backgroundPosition: "50% 50%",
           transition:
             "background-position 1.5s ease, background-size 1.5s ease, scale 0.3s ease",
         }}
@@ -92,8 +108,8 @@ const AddDeviceSheet = () => {
               <motion.select
                 whileHover={{ scale: 1.02 }}
                 className="w-full p-3 rounded-lg bg-gray-50 text-black border border-gray-300 shadow-sm focus:ring-2 focus:ring-black focus:outline-none"
-                value={deviceName}
-                onChange={(e) => setDeviceName(e.target.value)}
+                value={deviceType}
+                onChange={(e) => setDeviceType(e.target.value)}
               >
                 <option value="Air Conditioner">Air Conditioner</option>
                 <option value="Light & Bulb">Light & Bulb</option>
@@ -102,7 +118,7 @@ const AddDeviceSheet = () => {
 
             {/* SELECT ROOM */}
             <motion.div
-              className="mb-6"
+              className="mb-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
@@ -117,6 +133,61 @@ const AddDeviceSheet = () => {
                 <option value="Living Room">Living Room</option>
                 <option value="Bedroom">Bedroom</option>
               </motion.select>
+            </motion.div>
+
+            {/* DEVICE NAME INPUT */}
+            <motion.div
+              className="mb-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+            >
+              <label className="block text-gray-700 mb-2">Device Name</label>
+              <motion.input
+                type="text"
+                placeholder="Enter device name"
+                className="w-full p-3 rounded-lg bg-gray-50 text-black border border-gray-300 shadow-sm focus:ring-2 focus:ring-black focus:outline-none"
+                value={deviceName}
+                onChange={(e) => setDeviceName(e.target.value)}
+              />
+            </motion.div>
+
+            {/* DEVICE USAGE INPUT */}
+            <motion.div
+              className="mb-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+            >
+              <label className="block text-gray-700 mb-2">
+                Unit Usage (kWh)
+              </label>
+              <motion.input
+                type="number"
+                min="0"
+                className="w-full p-3 rounded-lg bg-gray-50 text-black border border-gray-300 shadow-sm focus:ring-2 focus:ring-black focus:outline-none"
+                value={unitUsage}
+                onChange={(e) => setUnitUsage(parseFloat(e.target.value))}
+              />
+            </motion.div>
+
+            {/* DEVICE COUNT INPUT */}
+            <motion.div
+              className="mb-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+            >
+              <label className="block text-gray-700 mb-2">
+                Number of Devices
+              </label>
+              <motion.input
+                type="number"
+                min="1"
+                className="w-full p-3 rounded-lg bg-gray-50 text-black border border-gray-300 shadow-sm focus:ring-2 focus:ring-black focus:outline-none"
+                value={deviceCount}
+                onChange={(e) => setDeviceCount(parseInt(e.target.value))}
+              />
             </motion.div>
 
             {/* ADD DEVICE BUTTON */}

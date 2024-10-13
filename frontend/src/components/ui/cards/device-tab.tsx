@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { IconChevronRight, IconTrash } from "@tabler/icons-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/utils/cn";
 
 interface DeviceTabProps {
   title: string;
   count: number;
   devices: string[];
   icon?: React.JSX.Element | React.ReactNode;
-  onDelete: (device: string) => void; 
+  onDelete: (device: string) => void;
+  disabledClick?: boolean;
 }
 
 const DeviceTab = ({
@@ -16,6 +18,7 @@ const DeviceTab = ({
   devices,
   icon,
   onDelete,
+  disabledClick,
 }: DeviceTabProps) => {
   const [isDeviceSelectionOpen, setIsDeviceSelectionOpen] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -37,7 +40,7 @@ const DeviceTab = ({
       {/* Device Tab - Open device selection on click */}
       <div
         className="relative z-10 flex justify-between items-center gap-4 p-2 w-full rounded-full transition-all duration-500 group hover:bg-white cursor-pointer"
-        onClick={() => setIsDeviceSelectionOpen(true)}
+        onClick={() => !disabledClick && setIsDeviceSelectionOpen(true)}
       >
         <div className="flex justify-center items-center bg-white rounded-full w-14 h-14 transition-colors duration-500 group-hover:bg-neutral-200">
           {icon && icon}
@@ -49,7 +52,7 @@ const DeviceTab = ({
           </p>
         </div>
 
-        <IconChevronRight className="text-neutral-700 h-4 w-4 ml-auto" />
+          <IconChevronRight className={cn("text-neutral-700 h-4 w-4 ml-auto", disabledClick && "text-transparent")} />
       </div>
 
       {/* Device Selection Modal */}

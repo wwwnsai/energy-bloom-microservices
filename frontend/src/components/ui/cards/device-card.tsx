@@ -7,12 +7,13 @@ import { BackgroundGradientAnimation } from "../backgrounds/background-gradient-
 interface DeviceCardProps {
   airConditionersCount: number;
   lightsCount: number;
-  selectedRoom: "Living Room" | "Bedroom" | "Home"; 
+  selectedRoom: "Living Room" | "Bedroom" | "Home";
   devices: {
     "Living Room": string[];
     Bedroom: string[];
   };
   onDeleteDevice: (device: string, room: string) => void;
+  disabledClick?: boolean;
 }
 
 const DeviceCard = ({
@@ -21,8 +22,8 @@ const DeviceCard = ({
   selectedRoom,
   devices,
   onDeleteDevice,
+  disabledClick,
 }: DeviceCardProps) => {
-
   // Combine devices if "Home" is selected, otherwise use the selected room's devices
   const roomDevices =
     selectedRoom === "Home"
@@ -38,29 +39,30 @@ const DeviceCard = ({
   return (
     <div className="h-full w-[28%] rounded-3xl bg-gray-100  ">
       <BackgroundGradientAnimation className="p-5 flex flex-col justify-between w-full h-full">
-          <div className="space-y-3">
-            <h2 className="text-xl font-bold text-black mb-6">Devices</h2>
-            {/* Air Conditioners Tab */}
-            <DeviceTab
-              title="Air Conditioners"
-              count={airConditioners.length}
-              devices={airConditioners}
-              icon={
-                <IconAirConditioning className="text-neutral-700 h-6 w-6" />
-              }
-              onDelete={(device) => onDeleteDevice(device, selectedRoom)}
-            />
+        <div className="space-y-3">
+          <h2 className="text-xl font-bold text-black mb-6">Devices</h2>
+          {/* Air Conditioners Tab */}
+          <DeviceTab
+            title="Air Conditioners"
+            count={airConditioners.length}
+            devices={airConditioners}
+            icon={<IconAirConditioning className="text-neutral-700 h-6 w-6" />}
+            onDelete={(device) => onDeleteDevice(device, selectedRoom)}
+            disabledClick={disabledClick}
+          />
 
-            {/* Lights & Bulbs Tab */}
-            <DeviceTab
-              title="Lights & Bulbs"
-              count={lights.length}
-              devices={lights}
-              icon={<IconBulb className="text-neutral-700 h-6 w-6" />}
-              onDelete={(device) => onDeleteDevice(device, selectedRoom)}
-            />
-          </div>
-          <AddDeviceSheet />
+          {/* Lights & Bulbs Tab */}
+          <DeviceTab
+            title="Lights & Bulbs"
+            count={lights.length}
+            devices={lights}
+            icon={<IconBulb className="text-neutral-700 h-6 w-6" />}
+            onDelete={(device) => onDeleteDevice(device, selectedRoom)}
+            disabledClick={disabledClick}
+          />
+        </div>
+        {/* Add Device Button */}
+        {!disabledClick && <AddDeviceSheet />}
       </BackgroundGradientAnimation>
     </div>
   );
