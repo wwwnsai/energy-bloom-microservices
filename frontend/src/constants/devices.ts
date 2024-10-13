@@ -3,24 +3,29 @@ import { Aircon } from "../types/aircon";
 import { Light } from "../types/light";
 import { set } from "zod";
 
-export type Device = { id: string; name: string };
+export type Device = {
+  id: string;
+  name: string;
+  unit_usage: number;
+  count: number;
+};
 
 export type AirconRooms = {
   "Living Room": Device[];
-  "Bedroom": Device[];
+  Bedroom: Device[];
 };
 
 export type LightsRooms = {
   "Living Room": Device[];
-  "Bedroom": Device[];
-}
+  Bedroom: Device[];
+};
 
 export const getAircons = () => {
   const [aircons, setAircons] = useState<AirconRooms>({
     "Living Room": [],
-    "Bedroom": [],
+    Bedroom: [],
   });
-  const [error, setError] = useState<string | null>(null); 
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchAircons = async () => {
@@ -35,30 +40,50 @@ export const getAircons = () => {
         const response = await fetch("http://localhost:3001/aircons", {
           method: "GET",
           headers: {
-            "Authorization": `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          credentials: 'include', 
+          credentials: "include",
         });
 
         if (response.ok) {
           const airconsData: Aircon[] = await response.json();
           const airconsByRoom: AirconRooms = {
             "Living Room": [],
-            "Bedroom": [],
+            Bedroom: [],
           };
 
           for (const aircon of airconsData) {
-            if (aircon.aircons_name.includes("Living Room") || aircon.aircons_name.includes("Livingroom")) {
-              airconsByRoom["Living Room"].push({ id: aircon.id, name: aircon.aircons_name });
-            } else if (aircon.aircons_name.includes("Bed Room") || aircon.aircons_name.includes("Bedroom")) {
-              airconsByRoom["Bedroom"].push({ id: aircon.id, name: aircon.aircons_name });
+            if (
+              aircon.aircons_name.includes("Living Room") ||
+              aircon.aircons_name.includes("Livingroom")
+            ) {
+              airconsByRoom["Living Room"].push({
+                id: aircon.id,
+                name: aircon.aircons_name,
+                unit_usage: aircon.aircons_unit_usage,
+                count: aircon.aircons_count,
+              });
+            } else if (
+              aircon.aircons_name.includes("Bed Room") ||
+              aircon.aircons_name.includes("Bedroom")
+            ) {
+              airconsByRoom["Bedroom"].push({
+                id: aircon.id,
+                name: aircon.aircons_name,
+                unit_usage: aircon.aircons_unit_usage,
+                count: aircon.aircons_count,
+              });
             }
           }
           // console.log("Aircons by room:", airconsByRoom);
           setAircons(airconsByRoom);
         } else {
-          console.error("Failed to fetch aircons:", response.status, response.statusText);
+          console.error(
+            "Failed to fetch aircons:",
+            response.status,
+            response.statusText
+          );
           setError(response.statusText);
         }
       } catch (error: any) {
@@ -72,13 +97,12 @@ export const getAircons = () => {
   return aircons;
 };
 
-
 export const getLights = () => {
   const [lights, setLights] = useState<LightsRooms>({
     "Living Room": [],
-    "Bedroom": [],
+    Bedroom: [],
   });
-  const [error, setError] = useState<string | null>(null); 
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchLights = async () => {
@@ -94,31 +118,51 @@ export const getLights = () => {
         const response = await fetch("http://localhost:3004/lights", {
           method: "GET",
           headers: {
-            "Authorization": `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          credentials: 'include', 
+          credentials: "include",
         });
 
         if (response.ok) {
           const lightsData: Light[] = await response.json();
           const lightsByRoom: LightsRooms = {
             "Living Room": [],
-            "Bedroom": [],
+            Bedroom: [],
           };
 
           // Classifying air conditioners by room based on aircon_name
           for (const light of lightsData) {
-            if (light.lights_name.includes("Living Room") || light.lights_name.includes("Livingroom")) {
-              lightsByRoom["Living Room"].push({ id: light.id, name: light.lights_name });
-            } else if (light.lights_name.includes("Bed Room") || light.lights_name.includes("Bedroom")) {
-              lightsByRoom["Bedroom"].push({ id: light.id, name: light.lights_name });
+            if (
+              light.lights_name.includes("Living Room") ||
+              light.lights_name.includes("Livingroom")
+            ) {
+              lightsByRoom["Living Room"].push({
+                id: light.id,
+                name: light.lights_name,
+                unit_usage: light.lights_unit_usage,
+                count: light.lights_count,
+              });
+            } else if (
+              light.lights_name.includes("Bed Room") ||
+              light.lights_name.includes("Bedroom")
+            ) {
+              lightsByRoom["Bedroom"].push({
+                id: light.id,
+                name: light.lights_name,
+                unit_usage: light.lights_unit_usage,
+                count: light.lights_count,
+              });
             }
           }
           console.log("Lights by room:", lightsByRoom);
           setLights(lightsByRoom);
         } else {
-          console.error("Failed to fetch lights:", response.status, response.statusText);
+          console.error(
+            "Failed to fetch lights:",
+            response.status,
+            response.statusText
+          );
           setError(response.statusText);
         }
       } catch (error: any) {
@@ -132,7 +176,11 @@ export const getLights = () => {
   return lights;
 };
 
-export const addAircon = async (airconName: string, airconCount: number, airconUnitUsage: number) => {
+export const addAircon = async (
+  airconName: string,
+  airconCount: number,
+  airconUnitUsage: number
+) => {
   try {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -143,10 +191,10 @@ export const addAircon = async (airconName: string, airconCount: number, airconU
     const response = await fetch("http://localhost:3001/add-aircon", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      credentials: 'include',
+      credentials: "include",
       body: JSON.stringify({
         aircons_name: airconName,
         aircons_count: airconCount,
@@ -157,15 +205,22 @@ export const addAircon = async (airconName: string, airconCount: number, airconU
     if (response.ok) {
       console.log("Aircon added successfully.");
     } else {
-      console.error("Failed to add aircon:", response.status, response.statusText);
+      console.error(
+        "Failed to add aircon:",
+        response.status,
+        response.statusText
+      );
     }
-  }
-  catch (error: any) {
+  } catch (error: any) {
     console.error("Error adding aircon:", error);
   }
 };
 
-export const addLight = async (lightName: string, lightCount: number, lightUnitUsage: number) => {
+export const addLight = async (
+  lightName: string,
+  lightCount: number,
+  lightUnitUsage: number
+) => {
   try {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -176,10 +231,10 @@ export const addLight = async (lightName: string, lightCount: number, lightUnitU
     const response = await fetch("http://localhost:3004/add-light", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      credentials: 'include',
+      credentials: "include",
       body: JSON.stringify({
         lights_name: lightName,
         lights_count: lightCount,
@@ -190,10 +245,13 @@ export const addLight = async (lightName: string, lightCount: number, lightUnitU
     if (response.ok) {
       console.log("Light added successfully.");
     } else {
-      console.error("Failed to add light:", response.status, response.statusText);
+      console.error(
+        "Failed to add light:",
+        response.status,
+        response.statusText
+      );
     }
-  }
-  catch (error: any) {
+  } catch (error: any) {
     console.error("Error adding light:", error);
   }
 };
@@ -206,25 +264,31 @@ export const deleteAircon = async (airconId: string) => {
       return;
     }
 
-    const response = await fetch(`http://localhost:3001/delete-aircon/${airconId}`, {
-      method: "DELETE",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      credentials: 'include',
-    });
+    const response = await fetch(
+      `http://localhost:3001/delete-aircon/${airconId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
 
     if (response.ok) {
       console.log("Aircon deleted successfully.");
     } else {
-      console.error("Failed to delete aircon:", response.status, response.statusText);
+      console.error(
+        "Failed to delete aircon:",
+        response.status,
+        response.statusText
+      );
     }
-  }
-  catch (error: any) {
+  } catch (error: any) {
     console.error("Error deleting aircon:", error);
   }
-}
+};
 
 export const deleteLight = async (lightId: string) => {
   try {
@@ -234,27 +298,38 @@ export const deleteLight = async (lightId: string) => {
       return;
     }
 
-    const response = await fetch(`http://localhost:3004/delete-light/${lightId}`, {
-      method: "DELETE",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      credentials: 'include',
-    });
+    const response = await fetch(
+      `http://localhost:3004/delete-light/${lightId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
 
     if (response.ok) {
       console.log("Light deleted successfully.");
     } else {
-      console.error("Failed to delete light:", response.status, response.statusText);
+      console.error(
+        "Failed to delete light:",
+        response.status,
+        response.statusText
+      );
     }
-  }
-  catch (error: any) {
+  } catch (error: any) {
     console.error("Error deleting light:", error);
   }
-}
+};
 
-export const updateAircon = async (airconId: string, airconName: string, airconCount: number, airconUnitUsage: number) => {
+export const updateAircon = async (
+  airconId: string,
+  airconName: string,
+  airconUnitUsage: number,
+  airconCount: number
+) => {
   try {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -262,32 +337,45 @@ export const updateAircon = async (airconId: string, airconName: string, airconC
       return;
     }
 
-    const response = await fetch(`http://localhost:3001/update-aircon/${airconId}`, {
-      method: "PUT",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      credentials: 'include',
-      body: JSON.stringify({
-        aircons_name: airconName,
-        aircons_count: airconCount,
-        aircons_unit_usage: airconUnitUsage,
-      }),
-    });
+    const response = await fetch(
+      `http://localhost:3001/update-aircon/${airconId}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          aircons_name: airconName,
+          aircons_unit_usage: airconUnitUsage,
+          aircons_count: airconCount,
+        }),
+      }
+    );
 
     if (response.ok) {
-      console.log("Aircon updated successfully.");
+      const updatedAircon = await response.json();
+      console.log("Aircon updated successfully:", updatedAircon);
     } else {
-      console.error("Failed to update aircon:", response.status, response.statusText);
+      console.error(
+        "Failed to update aircon:",
+        response.status,
+        response.statusText
+      );
     }
-  }
-  catch (error: any) {
+  } catch (error: any) {
     console.error("Error updating aircon:", error);
   }
 };
 
-export const updateLight = async (lightId: string, lightName: string, lightCount: number, lightUnitUsage: number) => {
+
+export const updateLight = async (
+  lightId: string,
+  lightName: string,
+  lightUnitUsage: number,
+  lightCount: number
+) => {
   try {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -295,27 +383,34 @@ export const updateLight = async (lightId: string, lightName: string, lightCount
       return;
     }
 
-    const response = await fetch(`http://localhost:3004/update-light/${lightId}`, {
-      method: "PUT",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      credentials: 'include',
-      body: JSON.stringify({
-        lights_name: lightName,
-        lights_count: lightCount,
-        lights_unit_usage: lightUnitUsage,
-      }),
-    });
+    const response = await fetch(
+      `http://localhost:3004/update-light/${lightId}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          lights_name: lightName,
+          lights_unit_usage: lightUnitUsage,
+          lights_count: lightCount,
+        }),
+      }
+    );
 
     if (response.ok) {
-      console.log("Light updated successfully.");
+      const updatedLight = await response.json();
+      console.log("Light updated successfully:", updatedLight);
     } else {
-      console.error("Failed to update light:", response.status, response.statusText);
+      console.error(
+        "Failed to update light:",
+        response.status,
+        response.statusText
+      );
     }
-  }
-  catch (error: any) {
+  } catch (error: any) {
     console.error("Error updating light:", error);
   }
-}
+};

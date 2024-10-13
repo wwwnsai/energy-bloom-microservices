@@ -17,7 +17,6 @@ interface DeviceCardProps {
     "Living Room": Device[];
     "Bedroom": Device[];
   };
-  onDeleteDevice: (device: string, room: string) => void;
   disabledClick?: boolean;
 }
 
@@ -27,7 +26,6 @@ const DeviceCard = ({
   selectedRoom,
   aircons,
   lights,
-  onDeleteDevice,
   disabledClick,
 }: DeviceCardProps) => {
   // Combine aircons if "Home" is selected, otherwise use the selected room's aircons
@@ -53,7 +51,6 @@ const DeviceCard = ({
             devices={roomAircons}
             deviceType="Air Conditioner"
             icon={<IconAirConditioning className="text-neutral-700 h-6 w-6" />}
-            onDelete={(device) => onDeleteDevice(device, selectedRoom)}
             disabledClick={disabledClick}
           />
 
@@ -64,7 +61,6 @@ const DeviceCard = ({
             devices={roomLights}
             deviceType="Light & Bulb"
             icon={<IconBulb className="text-neutral-700 h-6 w-6" />}
-            onDelete={(device) => onDeleteDevice(device, selectedRoom)}
             disabledClick={disabledClick}
           />
         </div>

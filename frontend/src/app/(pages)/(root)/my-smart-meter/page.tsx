@@ -116,11 +116,7 @@ const Dashboard = () => {
 
   const aircons = getAircons();
   const lights = getLights();
-
-  const handleDeleteDevice = (device: string, room: string) => {
-    console.log(`Deleted ${device} from ${room}`);
-  };
-
+  
   return (
     <div className="flex flex-1 ml-10 my-6 mr-6 ">
       <div className="flex flex-col gap-3 flex-1 w-full h-full rounded-3xl">
@@ -156,7 +152,6 @@ const Dashboard = () => {
             selectedRoom={selectedRoom}
             aircons={aircons}
             lights={lights}
-            onDeleteDevice={handleDeleteDevice}
           />
         </div>
 

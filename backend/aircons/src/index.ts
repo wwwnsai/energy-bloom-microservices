@@ -171,6 +171,13 @@ app.post('/add-aircon', async (req: Request, res: Response) => {
 app.put('/update-aircon/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const { aircons_name, aircons_unit_usage, aircons_count } = req.body; 
+    console.log(
+      "Updating aircons:",
+      aircons_name,
+      aircons_count,
+      aircons_unit_usage
+    );
 
     try {
       const aircon = await Aircons.findByPk(id);
@@ -179,26 +186,28 @@ app.put('/update-aircon/:id', async (req: Request, res: Response) => {
         return;
       }
 
-      const updatedAircon = await Aircons.update({
-        aircons_name: aircon.aircons_name,
-        aircons_count: aircon.aircons_count,
-        aircons_unit_usage: aircon.aircons_unit_usage, 
-        updated_at: dayjs().toISOString(),
-      }, {
-        where: { id }
+      await Aircons.update(
+        {
+          aircons_name,  
+          aircons_unit_usage,
+          aircons_count,
+          updated_at: dayjs().toISOString(), 
+        },
+        {
+          where: { id },
+        }
+      );
+
+      const updatedAircon = await Aircons.findByPk(id); 
+
+      res.json({
+        message: 'Aircon updated successfully',
+        updatedAircon,  
       });
-
-      if (!updatedAircon[0]) {
-        res.status(404).json({ error: 'Aircon not found' });
-        return;
-      }
-
-      res.json({ message: 'Aircon updated successfully' });
-      } catch (error: any) {
-        console.error("Error fetching aircon:", error.message);
-        res.status(500).json({ error: error.message || 'Server error' });
-        return;
-      }
+    } catch (error: any) {
+      console.error("Error fetching aircon:", error.message);
+      res.status(500).json({ error: error.message || 'Server error' });
+    }
   } catch (error: any) {
     console.error("Error updating aircon:", error.message);
     res.status(500).json({ error: error.message || 'Server error' });

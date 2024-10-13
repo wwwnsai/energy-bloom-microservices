@@ -122,12 +122,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
   const aircons = getAircons();
   const lights = getLights();
-
-  const handleDeleteDevice = (device: string, room: string) => {
-    console.log(`Deleted ${device} from ${room}`);
-  };
   
-  // console.log("aircons:", aircons);
+  console.log("aircons:", aircons);
 
   return (
     <div className="flex flex-1 ml-10 my-6 mr-6 ">
@@ -163,7 +159,6 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             selectedRoom={selectedRoom}
             aircons={aircons}
             lights={lights}
-            onDeleteDevice={handleDeleteDevice}
           />
         </div>
 
