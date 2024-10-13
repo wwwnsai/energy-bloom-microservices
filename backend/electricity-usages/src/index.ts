@@ -54,7 +54,10 @@ app.get('/', async (req: Request, res: Response) => {
 // Get monthly usage by user
 app.get('/get-monthly-usage', async (req: Request, res: Response) => {
   console.log('Received request for /get-monthly-usage');
-  const { month, year } = req.body;
+  let { month, year } = req.body;
+  if (!month || !year) {
+    ({ month, year } = req.query);
+  }
   console.log('Month:', month, 'Year:', year);
 
   const authHeader = req.headers.authorization;

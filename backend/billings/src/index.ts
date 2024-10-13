@@ -167,25 +167,25 @@ app.post('/add-billing', async (req: Request, res: Response) => {
       }
 
       const { usage, price } = usageResponse.data;
-      const tax = price * TAX;
-      const total = price + tax;
+      const tax = Number(price) * TAX;
+      const total = Number(price) + Number(tax);
 
       const createdAt = new Date(); // Assuming you have a `createdAt` defined
 
-      // const newBilling = await Billings.create({
-      //   user_id,
-      //   month,
-      //   year,
-      //   usage,
-      //   price,
-      //   tax,
-      //   total,
-      //   created_at: createdAt,
-      //   updated_at: createdAt,
-      // });
+      const newBilling = await Billings.create({
+        user_id,
+        month,
+        year,
+        usage,
+        price,
+        tax,
+        total,
+        created_at: createdAt,
+        updated_at: createdAt,
+      });
+      console.log("New billing record:", newBilling);
 
-      // res.json({ message: 'Billing record created', billing: newBilling });
-      res.json({ message: 'Billing record created' });
+      res.json({ message: 'Billing record created', billing: newBilling });
     } catch (err: any) {
       console.error("Error creating billing record:", err.message);
       res.status(500).json({ error: err.message });
