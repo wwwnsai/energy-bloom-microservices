@@ -129,6 +129,7 @@ const Dashboard = ({ user }: DashboardProps) => {
         {/* TOP ROW */}
         <div className="flex gap-3 h-[60%]">
           <HomeManagementCard
+            currentPage="home"
             username={
               user ? `${user.first_name} ${user.last_name}` : "John Doe"
             }
@@ -187,62 +188,3 @@ const Dashboard = ({ user }: DashboardProps) => {
     </div>
   );
 };
-
-// const HomePage = () => {
-//   const router = useRouter();
-//   const [user, setUser] = useState(null);
-//   const [loading, setLoading] = useState(true);
-
-//   //   useEffect(() => {
-//   //     const checkUser = async () => {
-//   //       try {
-//   //         const token = localStorage.getItem('token');
-//   //         console.log("Token:", token);
-
-//   //         if (!token) {
-//   //           console.log("No token found, user is not logged in.");
-//   //           router.push("/sign-in");
-//   //         }
-
-//   //         const response = await fetch("http://localhost:3007/get-login", {
-//   //           method: "GET",
-//   //           headers: {
-//   //             "Authorization": `Bearer ${token}`, // Properly format the Authorization header
-//   //             "Content-Type": "application/json",
-//   //           },
-//   //           credentials: 'include',
-//   //         });
-
-//   //         if (response.ok) {
-//   //           const userData = await response.json();
-//   //           console.log("User is logged in:", userData);
-//   //           setUser(userData);
-//   //         } else {
-//   //           console.error("Failed to fetch user data:", response.statusText);
-//   //           router.push("/sign-in"); // Redirect to sign-in on failure
-//   //         }
-//   //       } catch (error) {
-//   //         console.error("Error fetching user data:", error);
-//   //         router.push("/sign-in");
-//   //       } finally {
-//   //         setLoading(false); // Update loading state
-//   //       }
-//   //     };
-
-//   //   checkUser();
-//   // }, [router]); // Include router in the dependency array
-
-//   // if (loading) {
-//   //   return <div>Loading...</div>; // Show loading message while fetching data
-//   // }
-
-//   // console.log("LOGGED IN USER:", user);
-
-//   return (
-//     <section className="no-scrollbar flex w-full flex-row max-xl:max-h-screen max-xl:overflow-y-scroll">
-
-//     </section>
-//   );
-// };
-
-// export default HomePage;

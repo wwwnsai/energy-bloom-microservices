@@ -26,7 +26,7 @@ ChartJS.register(
 const ElectricityUsageGraph = () => {
   // NOTE: 14 DAYS ONLY (ADD ONE MORE ON REAL PRESENTATION DAY)
   const MOCK_UNIT_USAGE = [
-    120, 300, 340, 480, 390, 490, 450, 470, 500, 400, 570, 690, 430, 500,
+    280, 320, 340, 480, 390, 490, 450, 470, 500, 400, 570, 690, 430, 500,
   ];
 
   const [unitUsageData, setUnitUsageData] = useState<number[]>(MOCK_UNIT_USAGE);

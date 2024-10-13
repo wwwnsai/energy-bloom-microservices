@@ -129,6 +129,7 @@ const Dashboard = ({ user }: DashboardProps) => {
         {/* TOP ROW */}
         <div className="flex gap-3 h-[50%]">
           <HomeManagementCard
+            currentPage="smart-meter"
             username={
               user ? `${user.first_name} ${user.last_name}` : "John Doe"
             }
