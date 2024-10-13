@@ -13,9 +13,9 @@ import { Loader2 } from "lucide-react";
 import { redirect, useRouter } from "next/navigation";
 
 import { authFormSchema } from "@/schema/auth.schema";
-import { Form } from "../../../components/ui/form";
-import { Button } from "../../../components/ui/button";
-import CustomInput from "../../../components/shared/olds/inputs/custom-input";
+import { Form } from "../../../components/ui/users/form";
+import { Button } from "../../../components/ui/users/button";
+import CustomInput from "../../../components/ui/users/custom-input";
 
 const AuthForm = ({ type }: { type: string }) => {
   const router = useRouter();

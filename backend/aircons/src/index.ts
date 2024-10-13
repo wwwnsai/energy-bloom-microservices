@@ -6,7 +6,6 @@ import Aircons from './../models/Aircons';
 import sequelize from './utils/db';
 import jwt from 'jsonwebtoken';
 import bodyParser from 'body-parser';
-import bcrypt from 'bcrypt';
 import dayjs from 'dayjs';
 
 dotenv.config();
@@ -162,42 +161,6 @@ app.post('/add-aircons', async (req: Request, res: Response) => {
     res.status(201).json(newAircon);
   } catch (error: any) {
     console.error("Error adding aircons:", error.message);
-    res.status(500).json({ error: error.message || 'Server error' });
-  }
-});
-
-app.put('/update-aircons/:id', async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    try {
-      const aircon = await Aircons.findByPk(id);
-      if (!aircon) {
-        res.status(404).json({ error: 'Aircon not found' });
-        return;
-      }
-
-      const updatedAircon = await Aircons.update({
-        aircons_name: aircon.aircons_name,
-        aircons_count: aircon.aircons_count,
-        aircons_unit_usage: aircon.aircons_unit_usage, 
-        updated_at: dayjs().toISOString(),
-      }, {
-        where: { id }
-      });
-
-      if (!updatedAircon[0]) {
-        res.status(404).json({ error: 'Aircon not found' });
-        return;
-      }
-
-      res.json({ message: 'Aircon updated successfully' });
-    } catch (error: any) {
-      console.error("Error fetching aircon:", error.message);
-      res.status(500).json({ error: error.message || 'Server error' });
-      return;
-    }
-  } catch (error: any) {
-    console.error("Error updating aircon:", error.message);
     res.status(500).json({ error: error.message || 'Server error' });
   }
 });

@@ -12,6 +12,7 @@ dotenv.config();
 const app = express();
 const PORT = 3007;
 const JWT_SECRET = 'secret';
+const PEPPER = 'pepper';
 
 if (!JWT_SECRET) {
   throw new Error('JWT_SECRET_KEY is not defined in environment variables');
