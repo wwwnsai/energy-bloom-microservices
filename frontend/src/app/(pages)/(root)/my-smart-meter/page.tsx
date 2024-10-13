@@ -21,7 +21,7 @@ import { PlusIcon } from "lucide-react";
 import RoomCard from "@/components/ui/cards/room-card";
 import DeviceCard from "@/components/ui/cards/device-card";
 import HomeManagementCard from "@/components/ui/cards/home-management-card";
-import { MOCK_DEVICES } from "@/constants/mock-device";
+import { getAircons, getLights } from "@/constants/mock-device";
 
 const MySmartMeterPage = () => {
   const [open, setOpen] = useState(false);
@@ -114,6 +114,9 @@ const Dashboard = () => {
     "Home" | "Living Room" | "Bedroom"
   >("Home");
 
+  const aircons = getAircons();
+  const lights = getLights();
+
   const handleDeleteDevice = (device: string, room: string) => {
     console.log(`Deleted ${device} from ${room}`);
   };
@@ -135,24 +138,24 @@ const Dashboard = () => {
             airConditionersCount={
               (selectedRoom === "Home"
                 ? [
-                    ...(MOCK_DEVICES["Living Room"] || []),
-                    ...(MOCK_DEVICES["Bedroom"] || []),
+                    ...(aircons["Living Room"] || []),
+                    ...(aircons["Bedroom"] || []),
                   ]
-                : MOCK_DEVICES[selectedRoom as "Living Room" | "Bedroom"] || []
-              ).filter((device) => device.includes("Air Conditioner")).length ||
-              0
+                : aircons[selectedRoom as "Living Room" | "Bedroom"] || []
+              ).filter((device) => device).length || 0
             }
             lightsCount={
               (selectedRoom === "Home"
                 ? [
-                    ...(MOCK_DEVICES["Living Room"] || []),
-                    ...(MOCK_DEVICES["Bedroom"] || []),
+                    ...(lights["Living Room"] || []),
+                    ...(lights["Bedroom"] || []),
                   ]
-                : MOCK_DEVICES[selectedRoom as "Living Room" | "Bedroom"] || []
-              ).filter((device) => device.includes("Light")).length || 0
+                : lights[selectedRoom as "Living Room" | "Bedroom"] || []
+              ).filter((device) => device).length || 0
             }
             selectedRoom={selectedRoom}
-            devices={MOCK_DEVICES}
+            aircons={aircons}
+            lights={lights}
             onDeleteDevice={handleDeleteDevice}
           />
         </div>

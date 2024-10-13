@@ -8,7 +8,11 @@ interface DeviceCardProps {
   airConditionersCount: number;
   lightsCount: number;
   selectedRoom: "Living Room" | "Bedroom" | "Home";
-  devices: {
+  aircons: {
+    "Living Room": string[];
+    Bedroom: string[];
+  };
+  lights: {
     "Living Room": string[];
     Bedroom: string[];
   };
@@ -20,21 +24,21 @@ const DeviceCard = ({
   airConditionersCount,
   lightsCount,
   selectedRoom,
-  devices,
+  aircons,
+  lights,
   onDeleteDevice,
   disabledClick,
 }: DeviceCardProps) => {
-  // Combine devices if "Home" is selected, otherwise use the selected room's devices
-  const roomDevices =
+  // Combine aircons if "Home" is selected, otherwise use the selected room's aircons
+  const roomAircons =
     selectedRoom === "Home"
-      ? [...(devices["Living Room"] || []), ...(devices["Bedroom"] || [])]
-      : devices[selectedRoom] || [];
+      ? [...(aircons["Living Room"] || []), ...(aircons["Bedroom"] || [])]
+      : aircons[selectedRoom] || [];
 
-  // Separate air conditioners and lights
-  const airConditioners = roomDevices.filter((device) =>
-    device.includes("Air Conditioner")
-  );
-  const lights = roomDevices.filter((device) => device.includes("Light"));
+  const roomLights =
+    selectedRoom === "Home"
+      ? [...(lights["Living Room"] || []), ...(lights["Bedroom"] || [])]
+      : lights[selectedRoom] || [];
 
   return (
     <div className="h-full w-[28%] rounded-3xl bg-gray-100  ">
@@ -44,8 +48,8 @@ const DeviceCard = ({
           {/* Air Conditioners Tab */}
           <DeviceTab
             title="Air Conditioners"
-            count={airConditioners.length}
-            devices={airConditioners}
+            count={roomAircons.length}
+            devices={roomAircons}
             icon={<IconAirConditioning className="text-neutral-700 h-6 w-6" />}
             onDelete={(device) => onDeleteDevice(device, selectedRoom)}
             disabledClick={disabledClick}
@@ -54,13 +58,14 @@ const DeviceCard = ({
           {/* Lights & Bulbs Tab */}
           <DeviceTab
             title="Lights & Bulbs"
-            count={lights.length}
-            devices={lights}
+            count={roomLights.length}
+            devices={roomLights}
             icon={<IconBulb className="text-neutral-700 h-6 w-6" />}
             onDelete={(device) => onDeleteDevice(device, selectedRoom)}
             disabledClick={disabledClick}
           />
         </div>
+
         {/* Add Device Button */}
         {!disabledClick && <AddDeviceSheet />}
       </BackgroundGradientAnimation>

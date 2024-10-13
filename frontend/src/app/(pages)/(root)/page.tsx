@@ -21,19 +21,21 @@ import { PlusIcon } from "lucide-react";
 import RoomCard from "@/components/ui/cards/room-card";
 import DeviceCard from "@/components/ui/cards/device-card";
 import HomeManagementCard from "@/components/ui/cards/home-management-card";
-import { MOCK_DEVICES } from "@/constants/mock-device";
+import { getAircons, getLights } from "@/constants/mock-device";
+import { User } from "./../../../types/user";
+import { Aircon } from "./../../../types/aircon";
 
 
 const HomePage = () => {
   const [open, setOpen] = useState(false);
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState<User | null>(null);
 
   const router = useRouter();
 
   useEffect(() => {
     const fetchUsers = async () => {
       const token = localStorage.getItem("token");
-      console.log("Token:", token);
+      // console.log("Token:", token);
 
       try {
         const response = await fetch("http://localhost:3007/get-login", {
@@ -62,7 +64,7 @@ const HomePage = () => {
     fetchUsers();
   }, []);
 
-  console.log("USERS:", user);
+  // console.log("USERS:", user);
 
   return (
     <div
@@ -85,7 +87,7 @@ const HomePage = () => {
             <SidebarLink
               className="pl-[0.5rem]"
               link={{
-                label: user? user.first_name + " " + user.last_name : "John Doe",
+                label: user? `${user.first_name} ${user.last_name}` : "John Doe",
                 href: "#",
                 image: (
                   <Image
@@ -101,21 +103,31 @@ const HomePage = () => {
           </div>
         </SidebarBody>
       </Sidebar>
-      <Dashboard />
+      <Dashboard user={user} />
     </div>
   );
 };
 
 export default HomePage;
 
-const Dashboard = () => {
+
+type DashboardProps = {
+  user: User | null; // or User | undefined if that's possible in your case
+};
+
+const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const [selectedRoom, setSelectedRoom] = useState<
     "Home" | "Living Room" | "Bedroom"
   >("Home");
 
+  const aircons = getAircons();
+  const lights = getLights();
+
   const handleDeleteDevice = (device: string, room: string) => {
     console.log(`Deleted ${device} from ${room}`);
   };
+  
+  console.log("aircons:", aircons);
 
   return (
     <div className="flex flex-1 ml-10 my-6 mr-6 ">
@@ -123,7 +135,7 @@ const Dashboard = () => {
         {/* TOP ROW */}
         <div className="flex gap-3 h-[60%]">
           <HomeManagementCard
-            username="John Doe"
+            username= {user? `${user.first_name} ${user.last_name}` : "John Doe"}
             backgroundImage="https://christophorus.porsche.com/.imaging/mte/porsche-templating-theme/image_1080x624/dam/Christophorus-Website/C412/Zusatzgalerien-und-Thumbnails/Garage/24_06_03_Christophorus_TheNordicBarnProject-0110.jpg/jcr:content/24_06_03_Christophorus_TheNordicBarnProject-0110.jpg"
             livingRoomImage="https://images.unsplash.com/photo-1616940844649-535215ae4eb1?q=80&w=2487&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             bedroomImage="https://images.unsplash.com/photo-1727706572437-4fcda0cbd66f?q=80&w=2371&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -133,24 +145,24 @@ const Dashboard = () => {
             airConditionersCount={
               (selectedRoom === "Home"
                 ? [
-                    ...(MOCK_DEVICES["Living Room"] || []),
-                    ...(MOCK_DEVICES["Bedroom"] || []),
+                    ...(aircons["Living Room"] || []),
+                    ...(aircons["Bedroom"] || []),
                   ]
-                : MOCK_DEVICES[selectedRoom as "Living Room" | "Bedroom"] || []
-              ).filter((device) => device.includes("Air Conditioner")).length ||
-              0
+                : aircons[selectedRoom as "Living Room" | "Bedroom"] || []
+              ).filter((device) => device).length || 0
             }
             lightsCount={
               (selectedRoom === "Home"
                 ? [
-                    ...(MOCK_DEVICES["Living Room"] || []),
-                    ...(MOCK_DEVICES["Bedroom"] || []),
+                    ...(lights["Living Room"] || []),
+                    ...(lights["Bedroom"] || []),
                   ]
-                : MOCK_DEVICES[selectedRoom as "Living Room" | "Bedroom"] || []
-              ).filter((device) => device.includes("Light")).length || 0
+                : lights[selectedRoom as "Living Room" | "Bedroom"] || []
+              ).filter((device) => device).length || 0
             }
             selectedRoom={selectedRoom}
-            devices={MOCK_DEVICES}
+            aircons={aircons}
+            lights={lights}
             onDeleteDevice={handleDeleteDevice}
           />
         </div>
