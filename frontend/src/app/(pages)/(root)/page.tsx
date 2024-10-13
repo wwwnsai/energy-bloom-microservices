@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -23,8 +23,47 @@ import DeviceCard from "@/components/ui/cards/device-card";
 import HomeManagementCard from "@/components/ui/cards/home-management-card";
 import { MOCK_DEVICES } from "@/constants/mock-device";
 
+
 const HomePage = () => {
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState([]);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const token = localStorage.getItem("token");
+      console.log("Token:", token);
+
+      try {
+        const response = await fetch("http://localhost:3007/get-login", {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+          credentials: 'include', 
+        });
+
+        if (response.ok) {
+          const usersData = await response.json();
+          console.log("Users data:", usersData);
+          setUser(usersData);
+        } else {
+          console.error("Failed to fetch users:", response.statusText);
+          router.push("/sign-in");
+        }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        router.push("/sign-in");
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  console.log("USERS:", user);
+
   return (
     <div
       className={cn(
@@ -46,7 +85,7 @@ const HomePage = () => {
             <SidebarLink
               className="pl-[0.5rem]"
               link={{
-                label: "John Doe",
+                label: user? user.first_name + " " + user.last_name : "John Doe",
                 href: "#",
                 image: (
                   <Image
