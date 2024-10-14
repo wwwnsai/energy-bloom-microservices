@@ -68,7 +68,8 @@ const BillingPage = () => {
       const formattedInvoices = billingData
           .filter(billing => billing.year === year)
           .map(billing => {
-              const totalAmount = typeof billing.total === "number" ? billing.total : 0;
+              const totalAmount = typeof billing.total === "number" ? billing.total : Number(billing.total);
+              console.log("Total amount:", totalAmount);
               return {
                   date: new Date(year, billing.month - 1, 1).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }),
                   amount: `฿${totalAmount.toFixed(2)}`,

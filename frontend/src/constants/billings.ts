@@ -72,4 +72,4 @@ export const AddBilling = async (month: number, year: number) => {
         console.error("Error adding billing data:", error);
         return null;
     }
-}
+};

@@ -16,8 +16,8 @@ const BillingCard = ({
   tax,
   totalElectricityUsage,
 }: BillingCardProps) => {
-  const month = dayjs().format("MMMM");
-  const year = dayjs().format("YYYY");
+  const past_month = dayjs().subtract(1, "month").format("MMMM");
+  const year = dayjs().subtract(1, "month").format("YYYY");
 
   return (
     <motion.div
@@ -38,7 +38,7 @@ const BillingCard = ({
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          {month}, {year} Billing
+          {past_month}, {year} Billing
         </motion.h1>
       </motion.div>
 
