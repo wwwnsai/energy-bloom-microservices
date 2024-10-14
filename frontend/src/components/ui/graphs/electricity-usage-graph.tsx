@@ -12,6 +12,7 @@ import {
 import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import { BackgroundGradientAnimation } from "../backgrounds/background-gradient-animation";
+import { getElectricityUsages } from "@/constants/electricity-usages";
 
 ChartJS.register(
   CategoryScale,
@@ -24,16 +25,17 @@ ChartJS.register(
 );
 
 const ElectricityUsageGraph = () => {
-  // NOTE: 14 DAYS ONLY (ADD ONE MORE ON REAL PRESENTATION DAY)
-  const MOCK_UNIT_USAGE = [
-    280, 320, 340, 480, 390, 490, 450, 470, 500, 400, 570, 690, 430, 500,
-  ];
-
-  const [unitUsageData, setUnitUsageData] = useState<number[]>(MOCK_UNIT_USAGE);
+  const [unitUsageData, setUnitUsageData] = useState<number[]>([]);
   const [labels, setLabels] = useState<string[]>([]);
 
   useEffect(() => {
-    // Generate the labels for the current month up to today
+    const fetchData = async () => {
+      const unitUsages = await getElectricityUsages(2024); 
+      console.log("Unit usages:", unitUsages);
+      setUnitUsageData(unitUsages);
+    };
+    fetchData();
+
     const today = dayjs();
     const daysInMonth = today.date(); // Get the number of days up to today
     const labelData = Array.from({ length: daysInMonth }, (_, i) =>

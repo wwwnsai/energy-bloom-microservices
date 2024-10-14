@@ -95,6 +95,45 @@ app.get('/get-monthly-usage', async (req: Request, res: Response) => {
   }
 });
 
+app.get('/get-yearly-usage', async (req: Request, res: Response) => {
+  const { year } = req.query;
+  console.log('Year:', year);
+
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    res.status(401).json({ error: 'Token not provided or invalid' });
+    return;
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  let decodedToken;
+  try {
+    decodedToken = jwt.verify(token, JWT_SECRET);
+  } catch (err) {
+    console.error("Token verification error:", err);
+    res.status(401).json({ error: 'Invalid or expired token' });
+  }
+
+  const user_id = (decodedToken as any).userId;
+
+  try {
+    const usage = await Usages.findAll({
+      where: { user_id, year: Number(year) }
+    });
+
+    if (!usage) {
+      res.status(404).json({ message: 'No usage found for the given year.' });
+    } else {
+      res.json(usage);
+    }
+  } catch (err: any) {
+    console.error("Error fetching yearly usage:", err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Add new electricity usage
 app.post('/add-electricity-usage', async (req: Request, res: Response) => {
   const { month, year, usage } = req.body;
