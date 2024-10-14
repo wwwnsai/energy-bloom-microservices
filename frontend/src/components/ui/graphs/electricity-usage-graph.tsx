@@ -12,7 +12,7 @@ import {
 import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import { BackgroundGradientAnimation } from "../backgrounds/background-gradient-animation";
-import { getElectricityUsages } from "@/constants/electricity-usages";
+import { getElectricityUsages, addElectricityUsage, updateElectricityUsage } from "@/constants/electricity-usages";
 
 ChartJS.register(
   CategoryScale,
@@ -27,6 +27,9 @@ ChartJS.register(
 const ElectricityUsageGraph = () => {
   const [unitUsageData, setUnitUsageData] = useState<number[]>([]);
   const [labels, setLabels] = useState<string[]>([]);
+  const [currentMonth, setCurrentMonth] = useState<number>(dayjs().month() + 1); // Month index starts from 0
+  const [currentYear, setCurrentYear] = useState<number>(dayjs().year());
+  const [daysInMonth, setDaysInMonth] = useState<number>(dayjs().date());
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,30 +37,30 @@ const ElectricityUsageGraph = () => {
       console.log("Unit usages:", unitUsages);
       setUnitUsageData(unitUsages);
     };
+
     fetchData();
 
     const today = dayjs();
-    const daysInMonth = today.date(); // Get the number of days up to today
+    const dayOfMonth = today.date();
     const labelData = Array.from({ length: daysInMonth }, (_, i) =>
       today.set("date", i + 1).format("MMM D")
     );
     setLabels(labelData);
 
-    // Set an interval to update the unit usage data for the current day
+  
+    if (dayOfMonth === 1) {
+      addElectricityUsage(currentMonth, currentYear, Math.floor(Math.random() * 100));
+    }
+
     const interval = setInterval(() => {
-      setUnitUsageData((prevUsage) => {
-        // Get the current day index (today is the last entry in the array)
-        const currentDayIndex = prevUsage.length - 1;
+      updateElectricityUsage(currentMonth, currentYear, Math.floor(Math.random() * 100));
+      
+      setCurrentMonth(today.month() + 1);
+      setCurrentYear(today.year());      
+      setDaysInMonth(today.date());      
+    }, 60000);
 
-        // Update only today's usage value by adding a random number
-        const updatedUsage = [...prevUsage];
-        updatedUsage[currentDayIndex] += Math.floor(Math.random() * 10);
-
-        return updatedUsage;
-      });
-    }, 60000); // Update every minute
-
-    return () => clearInterval(interval); 
+    return () => clearInterval(interval);
   }, []);
 
   const data = {

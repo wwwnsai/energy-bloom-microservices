@@ -14,13 +14,16 @@ export const getElectricityUsages = async (year: number): Promise<number[]>  => 
             credentials: 'include',
           });
 
-        if (response.ok) {
+          if (response.ok) {
             const usageData = await response.json();
-            let usages: number[] = [];
             console.log("Usage data:", usageData);
-            usageData.map((usage: ElectricityUsage) => {
-                usages.push(Number(usage.usage));
+            const sortedUsageData = usageData.sort((a: ElectricityUsage, b: ElectricityUsage) => {
+                return a.month - b.month;
             });
+            const usages = sortedUsageData.map((usage: ElectricityUsage) => {
+                return Number(usage.usage);
+            });
+
             return usages;
         } else {
             console.error("Failed to fetch usage data:", response.statusText);
