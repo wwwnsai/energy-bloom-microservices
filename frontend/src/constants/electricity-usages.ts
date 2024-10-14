@@ -35,6 +35,32 @@ export const getElectricityUsages = async (year: number): Promise<number[]>  => 
     }
 }
 
+export const getElectricityUsageByMonth = async (month: number, year: number): Promise<number> => {
+    try {
+        const response = await fetch(`http://localhost:3003/get-monthly-usage?month=${month}&year=${year}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json",
+            },
+            credentials: 'include',
+        });
+
+        if (response.ok) {
+            const usageData = await response.json();
+            console.log("Monthly usage data:", usageData);
+            return Number(usageData.usage) || 0;
+        } else {
+            console.error("Failed to fetch monthly usage data:", response.statusText);
+            return 0;
+        }
+    } catch (error) {
+        console.error("Error fetching monthly usage data:", error);
+        return 0;
+    }
+};
+
+
 export const addElectricityUsage = async (month: number, year: number, usage: number) => {
 
     try {

@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { redirect, useRouter } from "next/navigation";
-import Link from "next/link";
-import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { cn } from "@/utils/cn";
 import {
@@ -14,31 +12,25 @@ import {
 import { Logo } from "@/components/ui/logos/logo";
 import { LogoIcon } from "@/components/ui/logos/logo-icon";
 import { SIDE_BAR_LINKS } from "@/constants";
-import { BackgroundGradientAnimation } from "@/components/ui/backgrounds/background-gradient-animation";
-import DeviceTab from "@/components/ui/cards/device-tab";
-import { IconAirConditioning, IconBulb } from "@tabler/icons-react";
-import { PlusIcon } from "lucide-react";
-import RoomCard from "@/components/ui/cards/room-card";
-import DeviceCard from "@/components/ui/cards/device-card";
-import HomeManagementCard from "@/components/ui/cards/home-management-card";
-import { getAircons, getLights } from "@/constants/devices";
+import BillingCard from "@/components/ui/cards/billing-card";
 import { User } from "@/types/user";
 import CreditCard from "@/components/ui/cards/credit-card";
 import InvoiceCard from "@/components/ui/cards/invoice-card";
-import { MOCK_INVOICES } from "@/constants/mocks/mock-invoices";
-import BillingCard from "@/components/ui/cards/billing-card";
+// import { MOCK_INVOICES } from "@/constants/mocks/mock-invoices";
+import { getBillings } from "@/constants/billings";
+import { getElectricityUsageByMonth } from "@/constants/electricity-usages";
 
 const BillingPage = () => {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-
+  const [totalAmount, setTotalAmount] = useState<number | null>(null);
+  const [tax, setTax] = useState<number | null>(null);
+  const [usage, setElectricityUsage] = useState<number | null>(null);
+  const [invoices, setInvoices] = useState<{ date: string; amount: string }[]>([]);
   const router = useRouter();
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const token = localStorage.getItem("token");
-      // console.log("Token:", token);
-
       try {
         const response = await fetch("http://localhost:3007/get-login", {
           method: "GET",
@@ -51,7 +43,6 @@ const BillingPage = () => {
 
         if (response.ok) {
           const usersData = await response.json();
-          // console.log("Users data:", usersData);
           setUser(usersData);
         } else {
           console.error("Failed to fetch users:", response.statusText);
@@ -63,10 +54,43 @@ const BillingPage = () => {
       }
     };
 
-    fetchUsers();
-  }, []);
+    const month = new Date().getMonth() + 1;
+    const year = new Date().getFullYear();
 
-  console.log("USER:", user);
+    const fetchBillingData = async () => {
+      const billingData = await getBillings();
+      if (billingData.length > 0) {
+          const lastBilling = billingData[billingData.length - 1];
+          setTotalAmount(lastBilling.total);
+          setTax(lastBilling.tax);
+      }
+  
+      const formattedInvoices = billingData
+          .filter(billing => billing.year === year)
+          .map(billing => {
+              const totalAmount = typeof billing.total === "number" ? billing.total : 0;
+              return {
+                  date: new Date(year, billing.month - 1, 1).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }),
+                  amount: `฿${totalAmount.toFixed(2)}`,
+              };
+          });
+      
+      setInvoices(formattedInvoices);
+    };
+
+    const fetchMonthlyElectricityUsage = async (month: number, year: number) => {
+      try {
+        const usage = await getElectricityUsageByMonth(month, year);
+        setElectricityUsage(usage);
+      } catch (error) {
+        console.error("Error fetching monthly electricity usage:", error);
+      }
+    };
+
+    fetchUsers();
+    fetchBillingData();
+    fetchMonthlyElectricityUsage(month, year);
+  }, [router]);
 
   return (
     <div
@@ -89,9 +113,7 @@ const BillingPage = () => {
             <SidebarLink
               className="pl-[0.5rem]"
               link={{
-                label: user
-                  ? `${user.first_name} ${user.last_name}`
-                  : "John Doe",
+                label: user ? `${user.first_name} ${user.last_name}` : "John Doe",
                 href: "#",
                 image: (
                   <Image
@@ -107,7 +129,7 @@ const BillingPage = () => {
           </div>
         </SidebarBody>
       </Sidebar>
-      <Dashboard user={user} />
+      <Dashboard user={user} totalAmount={totalAmount} tax={tax} usage={usage} invoices={invoices} /> {/* Pass invoices to Dashboard */}
     </div>
   );
 };
@@ -116,13 +138,13 @@ export default BillingPage;
 
 type DashboardProps = {
   user: User | null;
+  totalAmount: number | null;
+  tax: number | null;
+  usage: number | null;
+  invoices: { date: string; amount: string }[];
 };
 
-const Dashboard = ({ user }: DashboardProps) => {
-  const [selectedRoom, setSelectedRoom] = useState<
-    "Home" | "Living Room" | "Bedroom"
-  >("Home");
-
+const Dashboard = ({ user, totalAmount, tax, usage, invoices }: DashboardProps) => {
   const handleViewAll = () => {
     console.log("View all invoices");
   };
@@ -130,20 +152,18 @@ const Dashboard = ({ user }: DashboardProps) => {
   const fullAddress = `${user?.address1}, ${user?.city}, ${user?.postal_code}`;
 
   return (
-    <div className="flex flex-1 ml-10 my-6 mr-6 ">
+    <div className="flex flex-1 ml-10 my-6 mr-6">
       <div className="flex flex-col gap-3 flex-1 w-full h-full rounded-3xl">
         {/* TOP ROW */}
         <div className="flex gap-3 h-[60%]">
           <BillingCard
-            clientName={
-              user ? `${user.first_name} ${user.last_name}` : "John Doe"
-            }
+            clientName={user ? `${user.first_name} ${user.last_name}` : "John Doe"}
             address={fullAddress}
-            totalAmount={5600}
-            tax={400}
-            totalElectricityUsage={450}
+            totalAmount={totalAmount || 0}
+            tax={tax || 0}
+            totalElectricityUsage={usage || 0}
           />
-          <InvoiceCard invoices={MOCK_INVOICES} onViewAll={handleViewAll} />
+          <InvoiceCard invoices={invoices} onViewAll={handleViewAll} /> {/* Pass the real invoices data */}
         </div>
 
         {/* BOTTOM ROW */}
