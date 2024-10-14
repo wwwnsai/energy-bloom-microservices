@@ -46,19 +46,9 @@ const DeviceCard = ({
       : lights[selectedRoom] || [];
 
   return (
-    <motion.div
-      className="h-full w-[28%] rounded-3xl bg-gray-100 shadow-lg"
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-    >
+    <div className="h-full w-[28%] rounded-3xl bg-gray-100 shadow-lg">
       <BackgroundGradientAnimation className="p-5 flex flex-col justify-between w-full h-full">
-        <motion.div
-          className="space-y-3"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, staggerChildren: 0.2 }}
-        >
+        <div className="space-y-3">
           <motion.h2
             className={cn(
               "text-xl font-bold text-black mb-6",
@@ -72,46 +62,33 @@ const DeviceCard = ({
           </motion.h2>
 
           {/* Air Conditioners Tab */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <DeviceTab
-              useWhiteStyle={useWhiteStyle}
-              title="Air Conditioners"
-              count={roomAircons.length}
-              devices={roomAircons}
-              deviceType="Air Conditioner"
-              icon={
-                <IconAirConditioning className="text-neutral-700 h-6 w-6" />
-              }
-              disabledClick={disabledClick}
-            />
-          </motion.div>
+          <DeviceTab
+            useWhiteStyle={useWhiteStyle}
+            title="Air Conditioners"
+            count={roomAircons.length}
+            devices={roomAircons}
+            deviceType="Air Conditioner"
+            icon={<IconAirConditioning className="text-neutral-700 h-6 w-6" />}
+            disabledClick={disabledClick}
+          />
 
           {/* Lights & Bulbs Tab */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <DeviceTab
-              useWhiteStyle={useWhiteStyle}
-              title="Lights & Bulbs"
-              count={roomLights.length}
-              devices={roomLights}
-              deviceType="Light & Bulb"
-              icon={<IconBulb className="text-neutral-700 h-6 w-6" />}
-              disabledClick={disabledClick}
-            />
-          </motion.div>
-        </motion.div>
+
+          <DeviceTab
+            useWhiteStyle={useWhiteStyle}
+            title="Lights & Bulbs"
+            count={roomLights.length}
+            devices={roomLights}
+            deviceType="Light & Bulb"
+            icon={<IconBulb className="text-neutral-700 h-6 w-6" />}
+            disabledClick={disabledClick}
+          />
+        </div>
 
         {/* Add Device Button */}
         {!disabledClick && <AddDeviceSheet />}
       </BackgroundGradientAnimation>
-    </motion.div>
+    </div>
   );
 };
 

@@ -123,7 +123,7 @@ const ElectricityUsageGraph = () => {
         pointerColor="255, 255, 255" // White for the pointer highlight
       >
         <div className="z-50 w-full flex flex-1 justify-start items-center">
-          <div className="w-full flex flex-1 scale-[85%] -translate-x-16 -translate-y-2">
+          <div className="w-full flex flex-1 scale-[80%] -translate-x-16 -translate-y-5">
             <Line data={data} options={options} />
           </div>
         </div>
