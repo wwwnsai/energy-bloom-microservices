@@ -1,10 +1,10 @@
-import { useState } from "react";
+"use client";
+
+import React, { useState } from "react";
 import { Switch } from "@headlessui/react";
-import DeviceTab from "./device-tab";
-import AirConditionerTab from "./air-conditioner-tab";
-import { IconTemperature, IconSnowflake, IconWind } from "@tabler/icons-react";
 import AirConditionerControl from "../airconditioner/air-conditioner-control";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { IconTemperature, IconSnowflake, IconWind } from "@tabler/icons-react";
 
 interface RoomCardProps {
   title: string;
@@ -28,17 +28,23 @@ const RoomCard = ({
   const [lightOn, setLightOn] = useState(isLightOn);
 
   return (
-    <div className="relative h-full w-full rounded-3xl bg-gray-100 p-5 flex flex-col justify-between">
+    <div
+      className="relative h-full w-full rounded-3xl bg-gray-100 p-5 flex flex-col justify-between shadow-lg"
+    >
       {/* Background Image */}
-      <div
+      <motion.div
         className="absolute inset-0 rounded-3xl"
         style={{
           backgroundImage: `url(${backgroundImage})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-          filter: lightOn ? "brightness(1)" : "brightness(0.5)",
-          transition: "filter 0.5s ease-in-out",
         }}
+        initial={{ opacity: 0 }}
+        animate={{
+          opacity: 1,
+          filter: lightOn ? "brightness(1)" : "brightness(0.5)",
+        }}
+        transition={{ duration: 0.8, ease: "easeInOut" }}
       />
 
       {/* Light Switch */}

@@ -133,25 +133,6 @@ const AddDeviceSheet = () => {
               </motion.button>
             </div>
 
-            {/* DEVICE TYPE SELECTION */}
-            <motion.div
-              className="mb-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              <label className="block text-gray-700 mb-2">Device Type</label>
-              <motion.select
-                whileHover={{ scale: 1.02 }}
-                className="w-full p-3 rounded-lg bg-gray-50 text-black border border-gray-300 shadow-sm focus:ring-2 focus:ring-black focus:outline-none"
-                value={deviceType}
-                onChange={(e) => setDeviceType(e.target.value)}
-              >
-                <option value="Air Conditioner">Air Conditioner</option>
-                <option value="Light & Bulb">Light & Bulb</option>
-              </motion.select>
-            </motion.div>
-
             {/* SELECT ROOM */}
             <motion.div
               className="mb-4"
@@ -168,6 +149,25 @@ const AddDeviceSheet = () => {
               >
                 <option value="Living Room">Living Room</option>
                 <option value="Bedroom">Bedroom</option>
+              </motion.select>
+            </motion.div>
+
+            {/* DEVICE TYPE SELECTION */}
+            <motion.div
+              className="mb-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              <label className="block text-gray-700 mb-2">Device Type</label>
+              <motion.select
+                whileHover={{ scale: 1.02 }}
+                className="w-full p-3 rounded-lg bg-gray-50 text-black border border-gray-300 shadow-sm focus:ring-2 focus:ring-black focus:outline-none"
+                value={deviceType}
+                onChange={(e) => setDeviceType(e.target.value)}
+              >
+                <option value="Air Conditioner">Air Conditioner</option>
+                <option value="Light & Bulb">Light & Bulb</option>
               </motion.select>
             </motion.div>
 

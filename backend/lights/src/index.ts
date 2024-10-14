@@ -166,9 +166,18 @@ app.post('/add-light', async (req: Request, res: Response) => {
   }
 });
 
+// Update lights
 app.put('/update-light/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const { lights_name, lights_unit_usage, lights_count } = req.body;
+    console.log(
+      "Updating lights:",
+      lights_name,
+      lights_unit_usage,
+      lights_count
+    );
+
     try {
       const light = await Lights.findByPk(id);
       if (!light) {
@@ -176,31 +185,34 @@ app.put('/update-light/:id', async (req: Request, res: Response) => {
         return;
       }
 
-      const updatedLight = await Lights.update({
-        lights_name: light.lights_name,
-        lights_count: light.lights_count,
-        lights_unit_usage: light.lights_unit_usage, 
-        updated_at: dayjs().toISOString(),
-      }, {
-        where: { id }
+      await Lights.update(
+        {
+          lights_name,  
+          lights_unit_usage,
+          lights_count,
+          updated_at: dayjs().toISOString(),  
+        },
+        {
+          where: { id },
+        }
+      );
+
+      const updatedLight = await Lights.findByPk(id);
+
+      res.json({
+        message: 'Light updated successfully',
+        updatedLight,  
       });
-
-      if (!updatedLight[0]) {
-        res.status(404).json({ error: 'Light not found' });
-        return;
-      }
-
-      res.json({ message: 'Light updated successfully' });
     } catch (error: any) {
       console.error("Error fetching light:", error.message);
       res.status(500).json({ error: error.message || 'Server error' });
-      return;
     }
   } catch (error: any) {
     console.error("Error updating light:", error.message);
     res.status(500).json({ error: error.message || 'Server error' });
   }
 });
+
 
 // Other routes...
 

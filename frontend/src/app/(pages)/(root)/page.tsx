@@ -22,8 +22,8 @@ import RoomCard from "@/components/ui/cards/room-card";
 import DeviceCard from "@/components/ui/cards/device-card";
 import HomeManagementCard from "@/components/ui/cards/home-management-card";
 import { getAircons, getLights } from "@/constants/devices";
-import { User } from "./../../../types/user";
 import { Aircon } from "./../../../types/aircon";
+import { User } from "@/types/user";
 
 
 const HomePage = () => {
@@ -112,10 +112,10 @@ export default HomePage;
 
 
 type DashboardProps = {
-  user: User | null; // or User | undefined if that's possible in your case
+  user: User | null; 
 };
 
-const Dashboard: React.FC<DashboardProps> = ({ user }) => {
+const Dashboard = ({ user }: DashboardProps) => {
   const [selectedRoom, setSelectedRoom] = useState<
     "Home" | "Living Room" | "Bedroom"
   >("Home");
@@ -123,19 +123,16 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const aircons = getAircons();
   const lights = getLights();
 
-  const handleDeleteDevice = (device: string, room: string) => {
-    console.log(`Deleted ${device} from ${room}`);
-  };
-  
-  // console.log("aircons:", aircons);
-
   return (
     <div className="flex flex-1 ml-10 my-6 mr-6 ">
       <div className="flex flex-col gap-3 flex-1 w-full h-full rounded-3xl">
         {/* TOP ROW */}
         <div className="flex gap-3 h-[60%]">
           <HomeManagementCard
-            username= {user? `${user.first_name} ${user.last_name}` : "John Doe"}
+            currentPage="home"
+            username={
+              user ? `${user.first_name} ${user.last_name}` : "John Doe"
+            }
             backgroundImage="https://christophorus.porsche.com/.imaging/mte/porsche-templating-theme/image_1080x624/dam/Christophorus-Website/C412/Zusatzgalerien-und-Thumbnails/Garage/24_06_03_Christophorus_TheNordicBarnProject-0110.jpg/jcr:content/24_06_03_Christophorus_TheNordicBarnProject-0110.jpg"
             livingRoomImage="https://images.unsplash.com/photo-1616940844649-535215ae4eb1?q=80&w=2487&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             bedroomImage="https://images.unsplash.com/photo-1727706572437-4fcda0cbd66f?q=80&w=2371&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -163,7 +160,6 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             selectedRoom={selectedRoom}
             aircons={aircons}
             lights={lights}
-            onDeleteDevice={handleDeleteDevice}
           />
         </div>
 
@@ -187,68 +183,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             currentMode="Heat"
             currentFanSpeed="Low"
           />
-          {/* <div className="h-ุfull w-full rounded-3xl bg-gray-100"></div> */}
         </div>
       </div>
     </div>
   );
 };
-
-// const HomePage = () => {
-//   const router = useRouter();
-//   const [user, setUser] = useState(null);
-//   const [loading, setLoading] = useState(true);
-
-//   //   useEffect(() => {
-//   //     const checkUser = async () => {
-//   //       try {
-//   //         const token = localStorage.getItem('token');
-//   //         console.log("Token:", token);
-
-//   //         if (!token) {
-//   //           console.log("No token found, user is not logged in.");
-//   //           router.push("/sign-in");
-//   //         }
-
-//   //         const response = await fetch("http://localhost:3007/get-login", {
-//   //           method: "GET",
-//   //           headers: {
-//   //             "Authorization": `Bearer ${token}`, // Properly format the Authorization header
-//   //             "Content-Type": "application/json",
-//   //           },
-//   //           credentials: 'include',
-//   //         });
-
-//   //         if (response.ok) {
-//   //           const userData = await response.json();
-//   //           console.log("User is logged in:", userData);
-//   //           setUser(userData);
-//   //         } else {
-//   //           console.error("Failed to fetch user data:", response.statusText);
-//   //           router.push("/sign-in"); // Redirect to sign-in on failure
-//   //         }
-//   //       } catch (error) {
-//   //         console.error("Error fetching user data:", error);
-//   //         router.push("/sign-in");
-//   //       } finally {
-//   //         setLoading(false); // Update loading state
-//   //       }
-//   //     };
-
-//   //   checkUser();
-//   // }, [router]); // Include router in the dependency array
-
-//   // if (loading) {
-//   //   return <div>Loading...</div>; // Show loading message while fetching data
-//   // }
-
-//   // console.log("LOGGED IN USER:", user);
-
-//   return (
-//     <section className="no-scrollbar flex w-full flex-row max-xl:max-h-screen max-xl:overflow-y-scroll">
-
-//     </section>
-//   );
-// };
-
-// export default HomePage;
