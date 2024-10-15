@@ -43,7 +43,7 @@ const ElectricityUsageGraph = () => {
     const today = dayjs();
     const dayOfMonth = today.date();
     const labelData = Array.from({ length: daysInMonth }, (_, i) =>
-      today.set("date", i + 1).format("MMM D")
+      today.set("month", i + 1).format("MMM") // Only format the month
     );
     setLabels(labelData);
 
